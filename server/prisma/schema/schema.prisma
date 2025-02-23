@@ -9,5 +9,19 @@ datasource db {
 }
 
 model User {
-  
+  id Int @id @default(autoincrement())
+  phoneNumber String? @unique
+  name String
+  password String? 
+  role Role @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Message Message[]
+}
+
+enum Role {
+  USER
+  ADMIN
+  COURIER
 }

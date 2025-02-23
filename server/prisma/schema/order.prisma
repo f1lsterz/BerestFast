@@ -1,0 +1,43 @@
+model Order {
+    id Int @id @default(autoincrement())
+    status Order_Status @default(PENDING)
+
+
+    completedAt DateTime?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    user_id Int
+    courier_id Int
+}
+
+model Order_Items {
+    id Int @id @default(autoincrement())
+    quantity Int
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    order_id Int
+    product_id Int
+}
+
+model Order_Review {
+    id Int @id @default(autoincrement())
+    rating Int
+    comment String?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    order_id Int
+    user_id Int
+}
+
+enum Order_Status {
+    PENDING
+    ACCEPTED
+    REJECTED
+    DELIVERED
+    CANCELLED
+}

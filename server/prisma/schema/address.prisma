@@ -1,0 +1,19 @@
+model Address {
+    id Int @id @default(autoincrement())
+    address String
+    
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    user_id Int
+    user User @relation(fields: [user_id], references: [id])
+}
+
+model Users_Addresses {
+    user_id Int
+    address_id Int
+    
+    user User @relation(fields: [user_id], references: [id])
+    address Address @relation(fields: [address_id], references: [id])
+    
+    @@id([user_id, address_id])
+}

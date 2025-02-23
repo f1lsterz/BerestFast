@@ -1,0 +1,19 @@
+model Notification {
+    id Int @id @default(autoincrement())
+    title String
+    description String
+    type Notification_Type @default(ORDER)
+
+    
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    user_id Int
+    order_id Int
+}
+
+enum Notification_Type {
+    ORDER
+    PAYMENT
+    SUPPORT    
+}

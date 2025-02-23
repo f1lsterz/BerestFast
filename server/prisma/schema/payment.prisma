@@ -1,0 +1,25 @@
+model Payment {
+    id Int @id @default(autoincrement())
+    amount Float
+    status Payment_Status @default(PENDING)
+    method Payment_Method @default(CARD)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    user_id Int
+    order_id Int
+}
+
+enum Payment_Status {
+    PENDING
+    COMPLETED
+    CANCELLED
+}
+
+enum Payment_Method {
+    CARD
+    APPLE_PAY
+    GOOGLE_PAY
+    CASH
+}

@@ -1,0 +1,29 @@
+model Product {
+    id Int @id @default(autoincrement())
+    name String
+    description String
+    price Float
+    image_url String
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Category {
+    id Int @id @default(autoincrement())
+    name String
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Favourite_Product {
+    user_id Int
+    product_id Int
+
+    user User @relation(fields: [user_id], references: [id])
+    product Product @relation(fields: [product_id], references: [id])
+
+    @@id([user_id, product_id])
+}
+
