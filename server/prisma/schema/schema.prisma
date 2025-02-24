@@ -20,6 +20,19 @@ model User {
   Message Message[]
 }
 
+model Session {
+    id Int @id @default(autoincrement())
+    userId Int @unique
+    user User @relation(fields: [userId], references: [id])
+
+    accessToken String
+    refreshToken String
+    deviceInfo Json 
+    
+    ipAddress String?
+    createdAt DateTime @default(now())
+}
+
 enum Role {
   USER
   ADMIN

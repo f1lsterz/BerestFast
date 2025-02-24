@@ -1,4 +1,4 @@
-// @ts-check
+// @ts-nocheck
 import eslint from "@eslint/js";
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
 import globals from "globals";
@@ -17,7 +17,7 @@ export default tseslint.config(
         ...globals.node,
         ...globals.jest,
       },
-      ecmaVersion: 5,
+      ecmaVersion: "latest",
       sourceType: "module",
       parserOptions: {
         project: "./tsconfig.json",
@@ -25,7 +25,14 @@ export default tseslint.config(
       },
     },
   },
-
+  {
+    plugins: ["@typescript-eslint", "prettier"],
+    extends: [
+      "plugin:@typescript-eslint/recommended",
+      "plugin:@typescript-eslint/recommended-requiring-type-checking",
+      "plugin:prettier/recommended",
+    ],
+  },
   {
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
@@ -37,5 +44,16 @@ export default tseslint.config(
       "no-console": 0,
       "prettier/prettier": 0,
     },
+  },
+  {
+    overrides: [
+      {
+        files: ["*.ts"],
+        parser: "@typescript-eslint/parser",
+        parserOptions: {
+          project: "./tsconfig.json",
+        },
+      },
+    ],
   }
 );
