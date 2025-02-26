@@ -2,13 +2,20 @@ model Order {
     id Int @id @default(autoincrement())
     status Order_Status @default(PENDING)
 
-
     completedAt DateTime?
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
     user_id Int
+    user User @relation("UserOrders", fields: [user_id], references: [id])
     courier_id Int
+    courier User @relation("CourierOrders", fields: [courier_id], references: [id])
+
+    orderItems Order_Items[]
+    chat Chat?
+    payment Payment?
+    reviews Order_Review[]
+    notifications Notification[]
 }
 
 model Order_Items {
@@ -19,7 +26,9 @@ model Order_Items {
     updatedAt DateTime @updatedAt
 
     order_id Int
+    order Order @relation(fields: [order_id], references: [id])
     product_id Int
+    product Product @relation(fields: [product_id], references: [id])
 }
 
 model Order_Review {
@@ -31,7 +40,9 @@ model Order_Review {
     updatedAt DateTime @updatedAt
 
     order_id Int
+    order Order @relation(fields: [order_id], references: [id])
     user_id Int
+    user User @relation(fields: [user_id], references: [id])
 }
 
 enum Order_Status {

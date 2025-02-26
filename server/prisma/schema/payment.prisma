@@ -8,7 +8,9 @@ model Payment {
     updatedAt DateTime @updatedAt
 
     user_id Int
-    order_id Int
+    user User @relation(fields: [user_id], references: [id])
+    order_id Int @unique
+    order Order @relation(fields: [order_id], references: [id])
 }
 
 enum Payment_Status {

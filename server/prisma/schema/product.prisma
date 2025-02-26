@@ -7,6 +7,11 @@ model Product {
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    categoryId Int
+    category Category @relation(fields: [categoryId], references: [id])
+    favouriteProduct Favourite_Product[]
+    orderItems Order_Items[]
 }
 
 model Category {
@@ -15,6 +20,8 @@ model Category {
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    products Product[]
 }
 
 model Favourite_Product {

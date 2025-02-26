@@ -1,11 +1,12 @@
 model Address {
     id Int @id @default(autoincrement())
-    address String
-    
+    street String
+    houseNumber String?
+
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    user_id Int
-    user User @relation(fields: [user_id], references: [id])
+
+    Users_Addresses Users_Addresses[]
 }
 
 model Users_Addresses {

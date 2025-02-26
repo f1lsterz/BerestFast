@@ -1,13 +1,12 @@
 model Chat {
     id Int @id @default(autoincrement())
+    type ChatType @default(PRIVATE)
 
     createdAt DateTime @default(now())
-
-    user1Id   Int
-    user1     User     @relation(fields: [user1Id], references: [id])
-
-    user2Id   Int
-    user2     User     @relation(fields: [user2Id], references: [id])
+    
+    orderId Int  @unique
+    order Order?  @relation(fields: [orderId], references: [id])
+    participants ChatParticipant[]
     messages Message[]
 }
 
@@ -21,4 +20,20 @@ model Message {
     user User @relation(fields: [userId], references: [id])
     chatId Int
     chat Chat @relation(fields: [chatId], references: [id])
+}
+
+model ChatParticipant {
+    id Int @id @default(autoincrement())
+
+    chatId Int
+    chat Chat @relation(fields: [chatId], references: [id])
+    userId Int
+    user User @relation(fields: [userId], references: [id])
+
+    @@unique([chatId, userId])
+}
+
+enum ChatType {
+    PRIVATE  
+    SUPPORT  
 }

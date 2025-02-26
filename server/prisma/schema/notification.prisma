@@ -4,12 +4,13 @@ model Notification {
     description String
     type Notification_Type @default(ORDER)
 
-    
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
     user_id Int
+    user User? @relation(fields: [user_id], references: [id])
     order_id Int
+    order Order? @relation(fields: [order_id], references: [id])
 }
 
 enum Notification_Type {
