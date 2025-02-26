@@ -10,37 +10,37 @@ datasource db {
 
 model User {
   id Int @id @default(autoincrement())
-  phoneNumber String? @unique
-  name String
-  password String? 
+  phoneNumber String @unique
+  name String @db.VarChar(100)
+  password String @db.VarChar(20)
   role Role @default(USER)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  chatParticipants ChatParticipant[]
+  chat_participants ChatParticipant[]
   messages Message[]
   sessions Session[]
   orders Order[] @relation("UserOrders")
   deliveries Order[] @relation("CourierOrders")
-  favouriteProducts Favourite_Product[]
-  userAddresses Users_Addresses[]
+  favourite_products Favourite_Product[]
+  user_addresses Users_Addresses[]
   notifications Notification[]
   payments Payment[]
-  Order_Review Order_Review[]
+  reviews Order_Review[]
 }
 
 model Session {
-    id Int @id @default(autoincrement())
-    accessToken String
-    refreshToken String
-    deviceInfo Json 
-    ipAddress String?
+  id Int @id @default(autoincrement())
+  refreshToken String
+  deviceInfo Json 
+  ipAddress String?
 
-    createdAt DateTime @default(now())
+  createdAt DateTime @default(now())
 
-    userId Int @unique
-    user User @relation(fields: [userId], references: [id])
+  user_id Int @unique
+  user User @relation(fields: [user_id], references: [id])
+  @@unique([user_id, refreshToken])
 }
 
 enum Role {

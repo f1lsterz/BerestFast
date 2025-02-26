@@ -1,8 +1,8 @@
 model Product {
     id Int @id @default(autoincrement())
     name String
-    description String
-    price Float
+    description String @db.Text
+    price Decimal @db.Decimal(10, 2)
     image_url String
 
     createdAt DateTime @default(now())
@@ -12,16 +12,20 @@ model Product {
     category Category @relation(fields: [categoryId], references: [id])
     favouriteProduct Favourite_Product[]
     orderItems Order_Items[]
+
+    @@index([name])
 }
 
 model Category {
     id Int @id @default(autoincrement())
-    name String
+    name String @unique
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
     products Product[]
+
+    @@index([name])
 }
 
 model Favourite_Product {

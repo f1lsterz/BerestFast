@@ -1,8 +1,8 @@
 model Payment {
     id Int @id @default(autoincrement())
-    amount Float
-    status Payment_Status @default(PENDING)
-    method Payment_Method @default(CARD)
+    amount Decimal @db.Decimal(10, 2)
+    status Payment_Status? @default(PENDING)
+    method Payment_Method? @default(CARD)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -11,6 +11,9 @@ model Payment {
     user User @relation(fields: [user_id], references: [id])
     order_id Int @unique
     order Order @relation(fields: [order_id], references: [id])
+
+    @@index([user_id]) 
+    @@index([order_id]) 
 }
 
 enum Payment_Status {
