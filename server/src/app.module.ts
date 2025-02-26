@@ -10,6 +10,7 @@ import { NotificationModule } from "./notification/notification.module";
 import { PaymentModule } from "./payment/payment.module";
 import config from "./config/config";
 import { ConfigModule } from "@nestjs/config";
+import { PrismaModule } from "./prisma.module";
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ConfigModule } from "@nestjs/config";
     ChatModule,
     NotificationModule,
     PaymentModule,
+    PrismaModule,
   ],
   controllers: [AppController],
   providers: [AppService],

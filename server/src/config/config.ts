@@ -6,13 +6,11 @@ export default registerAs("config", () => ({
     url: process.env.SERVER_URL || "http://localhost",
   },
   database: {
-    url:
-      process.env.DATABASE_URL ||
-      "mysql://root:123456@localhost:3306/berestfast",
+    url: process.env.DATABASE_URL || "mysql://root:123456@localhost:3306/dely",
   },
-  secret: process.env.JWT_SECRET || "berestfast",
+  secret: process.env.JWT_SECRET || "dely",
   signOptions: {
-    accessExpiresIn: process.env.JWT_ACCESS_EXPIRES_IN || "1d",
+    expiresIn: process.env.JWT_ACCESS_EXPIRES_IN || "1d",
     refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || "7d",
   },
   socket: {
@@ -23,7 +21,7 @@ export default registerAs("config", () => ({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     s3: {
-      bucket: process.env.AWS_S3_BUCKET_NAME || "berestfast-files",
+      bucket: process.env.AWS_S3_BUCKET_NAME || "dely-files",
       productImagesFolder: "products/",
       chatImagesFolder: "chats/",
     },

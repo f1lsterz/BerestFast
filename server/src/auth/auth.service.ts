@@ -17,9 +17,9 @@ export class AuthService {
   ) {}
 
   async login(loginDto: LoginDto) {
-    const { phoneNumber, password } = LoginDto;
+    const { phoneNumber, password } = loginDto;
 
-    const user = await this.userService.getUserByPhoneNumber(phoneNumber);
+    const user = await this.userService.getUserByPhone(phoneNumber);
 
     if (!user) {
       throw ApiError.NotFound("User not found");
