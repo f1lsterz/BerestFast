@@ -5,10 +5,10 @@ model Product {
     price Decimal @db.Decimal(10, 2)
     image_url String
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
 
-    categoryId Int
+    categoryId Int @map("category_id")
     category Category @relation(fields: [categoryId], references: [id])
     favouriteProduct Favourite_Product[]
     orderItems Order_Items[]
@@ -20,8 +20,8 @@ model Category {
     id Int @id @default(autoincrement())
     name String @unique
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
 
     products Product[]
 
@@ -29,12 +29,13 @@ model Category {
 }
 
 model Favourite_Product {
-    user_id Int
-    product_id Int
+    userId Int @map("user_id") 
+    productId Int @map("product_id")
 
-    user User @relation(fields: [user_id], references: [id])
-    product Product @relation(fields: [product_id], references: [id])
+    user User @relation(fields: [userId], references: [id])
+    product Product @relation(fields: [productId], references: [id])
 
-    @@id([user_id, product_id])
+    @@id([userId, productId])
+    @@map("favourite_product")
 }
 

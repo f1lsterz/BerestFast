@@ -2,39 +2,39 @@ model Order {
     id Int @id @default(autoincrement())
     status Order_Status @default(PENDING)
 
-    completedAt DateTime?
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    completedAt DateTime? @map("completed_at")
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
 
-    user_id Int
-    user User @relation("UserOrders", fields: [user_id], references: [id])
-    courier_id Int
-    courier User @relation("CourierOrders", fields: [courier_id], references: [id])
+    userId Int @map("user_id")
+    user User @relation("UserOrders", fields: [userId], references: [id])
+    courierId Int @map("courier_id")
+    courier User @relation("CourierOrders", fields: [courierId], references: [id])
 
     orderItems Order_Items[]
     chat Chat?
     payment Payment?
     reviews Order_Review[]
-    notifications Notification[]
 
-    @@index([user_id])
-    @@index([courier_id])
+    @@index([userId])
+    @@index([courierId])
 }
 
 model Order_Items {
     id Int @id @default(autoincrement())
     quantity Int
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
 
-    order_id Int
-    order Order @relation(fields: [order_id], references: [id])
-    product_id Int
-    product Product @relation(fields: [product_id], references: [id])
+    orderId Int @map("order_id")
+    order Order @relation(fields: [orderId], references: [id])
+    productId Int @map("product_id")
+    product Product @relation(fields: [productId], references: [id])
 
-    @@index([order_id]) 
-    @@index([product_id]) 
+    @@index([orderId]) 
+    @@index([productId]) 
+    @@map("order_items")
 }
 
 model Order_Review {
@@ -42,16 +42,17 @@ model Order_Review {
     rating Int
     comment String?
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
 
-    order_id Int
-    order Order @relation(fields: [order_id], references: [id])
-    user_id Int
-    user User @relation(fields: [user_id], references: [id])
+    orderId Int @map("order_id")
+    order Order @relation(fields: [orderId], references: [id])
+    userId Int @map("user_id")
+    user User @relation(fields: [userId], references: [id])
 
-    @@index([order_id])
-    @@index([user_id])
+    @@index([orderId])
+    @@index([userId])
+    @@map("order_reviews")
 }
 
 enum Order_Status {

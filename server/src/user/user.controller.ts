@@ -16,6 +16,9 @@ import { UserByIdNotPipe } from "src/common/pipes/NotExistBy/UserByIdNot";
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { User } from "src/common/types/user.response";
 import { Session } from "src/common/types/session.response";
+import { UpdateSessionDto } from "./dto/update.session.dto";
+import { SessionByIdNotPipe } from "src/common/pipes/NotExistBy/SessionByIdNot";
+import { CreateSessionDto } from "./dto/create.session.dto";
 
 @ApiTags("Users")
 @Controller("users")
@@ -93,6 +96,38 @@ export class UserController {
     return this.userService.deleteUser(userId);
   }
 
+  @Post(":userId/sessions")
+  @HttpCode(200)
+  @ApiOperation({ summary: "Create a new user session" })
+  @ApiParam({ name: "userId", required: true, description: "User ID" })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: "Session created",
+    type: Session,
+  })
+  async createUserSession(
+    @Param("userId", UserByIdNotPipe) userId: number,
+    createSessionDto: CreateSessionDto
+  ) {
+    return this.userService.createUserSession(userId, createSessionDto);
+  }
+
+  @Patch(":sessionId/sessions")
+  @HttpCode(200)
+  @ApiOperation({ summary: "Create a new user session" })
+  @ApiParam({ name: "sessionId", required: true, description: "Session ID" })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: "Session created",
+    type: Session,
+  })
+  async updateUserSession(
+    @Param("sessionId", SessionByIdNotPipe) sessionId: number,
+    updateSessionDto: UpdateSessionDto
+  ) {
+    return this.userService.updateUserSession(sessionId, updateSessionDto);
+  }
+
   @Get(":userId/sessions")
   @HttpCode(200)
   @ApiOperation({ summary: "Get all sessions of a user" })
@@ -116,5 +151,21 @@ export class UserController {
   })
   async deleteUserSessions(@Param("userId", UserByIdNotPipe) userId: number) {
     return this.userService.deleteUserSessions(userId);
+  }
+
+  @Delete(":userId/sessions/:sessionId")
+  @HttpCode(204)
+  @ApiOperation({ summary: "Delete session by Id of a user" })
+  @ApiParam({ name: "userId", required: true, description: "User ID" })
+  @ApiParam({ name: "sessionId", required: true, description: "Session ID" })
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: "Session deleted",
+  })
+  async deleteUserSession(
+    @Param("sessionId", SessionByIdNotPipe) sessionId: number,
+    @Param("userId", UserByIdNotPipe) userId: number
+  ) {
+    return this.userService.deleteUserSession(userId, sessionId);
   }
 }

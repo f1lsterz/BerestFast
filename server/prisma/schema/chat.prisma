@@ -2,9 +2,10 @@ model Chat {
     id Int @id @default(autoincrement())
     type ChatType @default(ORDER)
 
-    createdAt DateTime @default(now())
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
     
-    orderId Int?  @unique
+    orderId Int?  @unique @map("order_id")
     order Order?  @relation(fields: [orderId], references: [id])
     participants ChatParticipant[]
     messages Message[]
@@ -16,23 +17,25 @@ model Message {
     id Int @id @default(autoincrement())
     content String
 
-    userId Int
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    userId Int @map("user_id")
     user User @relation(fields: [userId], references: [id])
-    chatId Int
+    chatId Int @map("chat_id")
     chat Chat @relation(fields: [chatId], references: [id])
 
     @@unique([chatId, userId])
 }
 
 model ChatParticipant {
-    id Int @id @default(autoincrement())
-
-    chatId Int
+    chatId Int @map("chat_id")
     chat Chat @relation(fields: [chatId], references: [id])
-    userId Int
+    userId Int @map("user_id")
     user User @relation(fields: [userId], references: [id])
 
     @@unique([chatId, userId])
+    @@map("chat_participants")
 }
 
 enum ChatType {

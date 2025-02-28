@@ -2,6 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma.service";
 import { CreateUserDto } from "./dto/create.user.dto";
 import { UpdateUserDto } from "./dto/update.user.dto";
+import { CreateSessionDto } from "./dto/create.session.dto";
+import { UpdateSessionDto } from "./dto/update.session.dto";
 
 @Injectable()
 export class UserService {
@@ -23,22 +25,68 @@ export class UserService {
     return this.prisma.user.create({ data: createUserDto });
   }
 
-  async updateUser(id: number, updateUserDto: UpdateUserDto) {
+  async updateUser(userId: number, updateUserDto: UpdateUserDto) {
     return this.prisma.user.update({
-      where: { id },
+      where: { id: userId },
       data: updateUserDto,
     });
   }
 
-  async deleteUser(id: number) {
-    return this.prisma.user.delete({ where: { id } });
+  async deleteUser(userId: number) {
+    return this.prisma.user.delete({ where: { id: userId } });
   }
 
-  async getUserSessions(id: number) {
-    return this.prisma.session.findMany({ where: { user_id: id } });
+  async createUserSession(userId: number, createSessionDto: CreateSessionDto) {
+    const existingSession = await this.prisma.session.findFirst({
+      where: {
+        userId,
+        refreshToken: createSessionDto.refreshToken,
+      },
+    });
+
+    if (existingSession) {
+      throw new Error("Session already exists");
+    }
+
+    return this.prisma.session.create({
+      data: {
+        refreshToken: createSessionDto.refreshToken,
+        deviceName: createSessionDto.deviceName,
+        os: createSessionDto.os,
+        appVersion: createSessionDto.appVersion,
+        ipAddress: createSessionDto.ipAddress,
+        userId: userId,
+      },
+    });
   }
 
-  async deleteUserSessions(id: number) {
-    return this.prisma.session.deleteMany({ where: { user_id: id } });
+  async updateUserSession(
+    sessionId: number,
+    updateSessionDto: UpdateSessionDto
+  ) {
+    return this.prisma.session.update({
+      where: { id: sessionId },
+      data: {
+        refreshToken: updateSessionDto.refreshToken,
+        deviceName: updateSessionDto.deviceName,
+        os: updateSessionDto.os,
+        appVersion: updateSessionDto.appVersion,
+        ipAddress: updateSessionDto.ipAddress,
+      },
+    });
+  }
+
+  async getUserSessions(userId: number) {
+    return this.prisma.session.findMany({ where: { userId } });
+  }
+
+  async deleteUserSessions(userId: number) {
+    return this.prisma.session.deleteMany({ where: { userId } });
+  }
+
+  async deleteUserSession(userId: number, sessionId: number) {
+    return this.prisma.session.delete({
+      where: { id: sessionId, userId },
+    });
   }
 }
