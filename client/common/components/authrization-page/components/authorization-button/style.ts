@@ -2,7 +2,7 @@ import { StyleSheet,Dimensions } from "react-native";
 
 const { height } = Dimensions.get('window');
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
     buttonStyle:{
         width:"70%",
         height:height*0.05,
@@ -14,4 +14,4 @@ const style = StyleSheet.create({
     }
 })
 
-export default style;
+export default styles;

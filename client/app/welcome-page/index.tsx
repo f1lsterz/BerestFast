@@ -6,7 +6,7 @@ import ButtonAuthList from "./components";
 
 import style from "./style";
 
-const WellcomePage = () => {
+const WelcomePage = () => {
   return (
     <DefaultPage
       headerContent={<Text style={style.textStyle}>Dely</Text>}
@@ -16,4 +16,4 @@ const WellcomePage = () => {
   );
 };
 
-export default WellcomePage;
+export default WelcomePage;

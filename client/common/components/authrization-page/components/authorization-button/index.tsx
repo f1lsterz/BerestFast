@@ -1,16 +1,18 @@
 import React from "react";
-import style from "./style";
+import styles from "./style";
 import { Text, TouchableOpacity, View } from "react-native";
 
 interface AuthorizationButtonProps {
   AuthorizationButtoContent?: React.ReactNode;
+  additionalFunction?: () => void;
 }
 
 const AuthorizationButton: React.FC<AuthorizationButtonProps> = ({
   AuthorizationButtoContent,
+  additionalFunction
 }) => {
   return (
-    <TouchableOpacity style = {style.buttonStyle}>
+    <TouchableOpacity onPress={additionalFunction} style = {styles.buttonStyle}>
       {AuthorizationButtoContent ? (
         AuthorizationButtoContent
       ) : (

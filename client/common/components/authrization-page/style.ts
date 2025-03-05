@@ -9,6 +9,8 @@ const style = StyleSheet.create({
     mainPart:{
         width:"100%",
         height:"70%",
+        justifyContent:'center',
+        alignItems:'center'
     }
 
 })
