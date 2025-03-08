@@ -73,16 +73,16 @@ export class ProductService {
 
   async addToFavourites(userId: number, productId: number) {
     return this.prisma.favourite_Product.create({
-      data: { user_id: userId, product_id: productId },
+      data: { userId, productId },
     });
   }
 
   async removeFromFavourites(userId: number, productId: number) {
     return this.prisma.favourite_Product.delete({
       where: {
-        user_id_product_id: {
-          user_id: userId,
-          product_id: productId,
+        userId_productId: {
+          userId,
+          productId,
         },
       },
     });
@@ -91,9 +91,9 @@ export class ProductService {
   async isProductInFavourites(userId: number, productId: number) {
     return this.prisma.favourite_Product.findUnique({
       where: {
-        user_id_product_id: {
-          user_id: userId,
-          product_id: productId,
+        userId_productId: {
+          userId,
+          productId,
         },
       },
     });
@@ -101,7 +101,7 @@ export class ProductService {
 
   async getUserFavouriteProducts(userId) {
     return this.prisma.favourite_Product.findMany({
-      where: { user_id: userId },
+      where: { userId },
     });
   }
 

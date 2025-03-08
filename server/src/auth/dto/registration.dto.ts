@@ -34,4 +34,36 @@ export class RegistrationDto {
   @IsPhoneNumber("UA")
   @Matches(/^\+380\d{9}$/, { message: "Phone number is not valid" })
   phoneNumber: string;
+
+  @ApiProperty({
+    description: "Назва пристрою",
+    example: "iPhone 13 Pro",
+  })
+  @IsString()
+  @IsNotEmpty()
+  deviceName: string;
+
+  @ApiProperty({
+    description: "Операційна система пристрою",
+    example: "iOS 17.3",
+  })
+  @IsString()
+  @IsNotEmpty()
+  os: string;
+
+  @ApiProperty({
+    description: "Версія додатку",
+    example: "1.2.5",
+  })
+  @IsString()
+  @IsNotEmpty()
+  appVersion: string;
+
+  @ApiProperty({
+    description: "IP-адреса користувача",
+    example: "192.168.1.1",
+    required: false,
+  })
+  @IsString()
+  ipAddress?: string;
 }

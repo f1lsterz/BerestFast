@@ -25,5 +25,9 @@ export default registerAs("config", () => ({
       productImagesFolder: "products/",
       chatImagesFolder: "chats/",
     },
+    elastiCache: {
+      host: /* process.env.REDIS_HOST || */ "localhost",
+      port: /* process.env.REDIS_PORT  ||*/ 6379,
+    },
   },
 }));

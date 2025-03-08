@@ -8,8 +8,8 @@ export class OrderService {
   async createOrder(userId: number, courierId: number, orderItems) {
     return this.prisma.order.create({
       data: {
-        user_id: userId,
-        courier_id: courierId,
+        userId,
+        courierId,
       },
     });
   }
@@ -43,7 +43,7 @@ export class OrderService {
 
   async getUserOrders(userId: number) {
     return this.prisma.order.findMany({
-      where: { user_id: userId },
+      where: { userId: userId },
     });
   }
 
@@ -55,8 +55,8 @@ export class OrderService {
   ) {
     return this.prisma.order_Review.create({
       data: {
-        order_id: orderId,
-        user_id: userId,
+        orderId,
+        userId,
         rating,
         comment,
       },
@@ -80,8 +80,8 @@ export class OrderService {
   async addOrderItem(orderId: number, productId: number, quantity) {
     return this.prisma.order_Items.create({
       data: {
-        order_id: orderId,
-        product_id: productId,
+        orderId,
+        productId,
         quantity,
       },
     });
@@ -104,7 +104,7 @@ export class OrderService {
 
   async getOrderReviews(orderId: number) {
     return this.prisma.order_Review.findMany({
-      where: { order_id: orderId },
+      where: { orderId },
     });
   }
 }

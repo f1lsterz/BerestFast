@@ -26,4 +26,36 @@ export class LoginDto {
   @IsPhoneNumber("UA")
   @Matches(/^\+380\d{9}$/, { message: "Phone number is not valid" })
   phoneNumber: string;
+
+  @ApiProperty({
+    description: "Назва пристрою",
+    example: "Samsung Galaxy S23",
+  })
+  @IsString()
+  @IsNotEmpty()
+  deviceName: string;
+
+  @ApiProperty({
+    description: "Операційна система пристрою",
+    example: "Android 14",
+  })
+  @IsString()
+  @IsNotEmpty()
+  os: string;
+
+  @ApiProperty({
+    description: "Версія додатку",
+    example: "2.1.0",
+  })
+  @IsString()
+  @IsNotEmpty()
+  appVersion: string;
+
+  @ApiProperty({
+    description: "IP-адреса користувача",
+    example: "203.0.113.195",
+    required: false,
+  })
+  @IsString()
+  ipAddress?: string;
 }

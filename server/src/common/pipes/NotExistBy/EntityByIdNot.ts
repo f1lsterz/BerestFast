@@ -10,7 +10,7 @@ export class EntityByIdNotPipe implements PipeTransform {
   ) {}
 
   async transform(id: number) {
-    const entity = await this.prisma[this.entity].findOne({
+    const entity = await this.prisma[this.entity].findUnique({
       where: { id },
     });
 

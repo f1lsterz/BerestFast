@@ -1,22 +1,21 @@
 import {
-  ArgumentsHost,
-  BadRequestException,
   Catch,
+  ArgumentsHost,
+  HttpException,
   ExceptionFilter,
 } from "@nestjs/common";
+import { ApiError } from "src/common/errors/apiError"; // ваш клас помилки
 
-@Catch(BadRequestException)
-export class ValidationFilter implements ExceptionFilter {
-  catch(exception: BadRequestException, host: ArgumentsHost) {
+@Catch(ApiError)
+export class ApiErrorFilter implements ExceptionFilter {
+  catch(exception: ApiError, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
-    const status = exception.getStatus();
+    const status = exception.status || 500; // Використовуємо статус з ApiError
 
-    const errorResponse = {
+    response.status(status).json({
       statusCode: status,
-      message: exception.getResponse()["message"] || "Validation failed",
-    };
-
-    response.status(status).json(errorResponse);
+      message: exception.message,
+    });
   }
 }
