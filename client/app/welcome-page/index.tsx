@@ -9,7 +9,7 @@ import style from "./style";
 const WelcomePage = () => {
   return (
     <DefaultPage
-      headerContent={<Text style={style.textStyle}>Dely</Text>}
+      headerContent={<Text>Dely</Text>}
       logoContent={<SvgComponent />}
       footerContent={<ButtonAuthList />}  
     />

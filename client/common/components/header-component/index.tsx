@@ -1,15 +1,19 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { TouchableOpacity, View } from "react-native";
+import BackButton from "@client/common/svg/back-button";
 import style from "./style";
+import { useRouter } from "expo-router";
 
-interface HeaderComponentProps {
-  headerContent?: React.ReactNode; 
-}
+const HeaderComponent = () => {
+  const router = useRouter();
 
-const HeaderComponent: React.FC<HeaderComponentProps> = ({ headerContent }) => {
+  const handleOnPress = () => {router.back()};
+
   return (
-    <View style={style.header}>
-      {headerContent ? headerContent : <Text>Default Header</Text>}
+    <View style={style.headerContainer}>
+      <TouchableOpacity onPress={handleOnPress} style={style.backbutton}>
+        <BackButton />
+      </TouchableOpacity>
     </View>
   );
 };

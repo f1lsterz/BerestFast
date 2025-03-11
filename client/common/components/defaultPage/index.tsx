@@ -1,13 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 import Style from "./style";
-import HeaderComponent from "../header-component";
-
-interface DefaultPageProps {
-  headerContent: React.ReactNode;
-  logoContent: React.ReactNode;
-  footerContent: React.ReactNode;
-}
+import { DefaultPageProps } from "@client/common/interface/default-page-interface";
 
 const DefaultPage: React.FC<DefaultPageProps> = ({
   headerContent,
@@ -15,12 +9,9 @@ const DefaultPage: React.FC<DefaultPageProps> = ({
   footerContent,
 }) => {
   return (
-    <View style={Style.container}>
-      <HeaderComponent headerContent={headerContent}/>
-
-      <View style={Style.mainPart}>{logoContent}</View>
-
-      <View style={Style.footer}>{footerContent}</View>
+    <View style = {Style.mainContainer}>
+      <View>{logoContent}</View>
+      <View>{footerContent}</View>
     </View>
   );
 };

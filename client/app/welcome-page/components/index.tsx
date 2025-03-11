@@ -9,23 +9,26 @@ const ButtonAuthList = () => {
   const statusForSignIn = "sign-in";
   const statusForSignUp = "sing-up";
 
- 
   return (
-    <>
+    <View style={style.buttonListContainer}>
       <TouchableOpacity
-        onPress={() => router.navigate(`authorization/sign-in?status=${statusForSignIn}`)}
-        style={style.SingUpButton}
+        onPress={() =>
+          router.navigate(`authorization/code-page?status=${statusForSignIn}`)
+        }
+        style = {style.signInButton}
       >
-        <Text style={style.SingUpButtonText}>Sign in</Text>
+        <Text>Увійти</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-        onPress={() => router.navigate(`authorization/sign-up?status=${statusForSignUp}`)}  
-        style={style.SingInButton}
+        onPress={() =>
+          router.navigate(`authorization/code-page??status=${statusForSignUp}`)
+        }
+        style = {style.signUpButton}
       >
-        <Text style={style.SingInButtonText}>Sign up</Text>
+        <Text>Зареєструватися</Text>
       </TouchableOpacity>
-    </>
+    </View>
   );
 };
 
