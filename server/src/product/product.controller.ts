@@ -9,7 +9,7 @@ import {
   Put,
   Query,
 } from "@nestjs/common";
-import { ProductService } from "./product.service";
+import { ProductService } from "@product/product.service";
 import {
   ApiBody,
   ApiOperation,
@@ -17,8 +17,8 @@ import {
   ApiQuery,
   ApiTags,
 } from "@nestjs/swagger";
-import { CreateProductDto } from "./dto/create.product.dto";
-import { UpdateProductDto } from "./dto/update.product.dto";
+import { CreateProductDto } from "@product/dto/create.product.dto";
+import { UpdateProductDto } from "@product/dto/update.product.dto";
 
 @ApiTags("Products")
 @Controller("products")

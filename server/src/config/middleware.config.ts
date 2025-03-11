@@ -1,12 +1,31 @@
 import { INestApplication } from "@nestjs/common";
 import helmet from "helmet";
-//import * as compression from "compression";
 import compression from "compression";
-//import * as cors from "cors";
 import cors from "cors";
+import rateLimit from "express-rate-limit";
 
 export function setupMiddlewares(app: INestApplication) {
-  app.use(helmet());
-  app.use(compression());
   app.use(cors());
+
+  app.use(
+    helmet({
+      contentSecurityPolicy: false, // Вимикаємо CSP (не потрібен для API)
+      referrerPolicy: { policy: "no-referrer" }, // Приховує реферер
+    })
+  );
+
+  app.use(
+    rateLimit({
+      windowMs: 15 * 60 * 1000, // 15 хвилин
+      max: 100, // Макс. 100 запитів з одного IP
+      message: "Too many requests from this IP, please try again later",
+    })
+  );
+
+  app.use(
+    compression({
+      level: 6, // Оптимальний рівень стиснення
+      threshold: 1024, // Стискати тільки якщо відповідь > 1KB
+    })
+  );
 }

@@ -1,5 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Role } from "@prisma/client";
 import {
+  IsEnum,
   IsNotEmpty,
   IsPhoneNumber,
   IsString,
@@ -33,4 +35,12 @@ export class CreateUserDto {
   @IsPhoneNumber("UA")
   @Matches(/^\+380\d{9}$/, { message: "Phone number is not valid" })
   phoneNumber: string;
+
+  @ApiProperty({
+    example: "USER",
+    description: "Роль користувача (USER, ADMIN, COURIER)",
+    enum: Role,
+  })
+  @IsEnum(Role)
+  role: Role;
 }

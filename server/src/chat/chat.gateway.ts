@@ -5,9 +5,9 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from "@nestjs/websockets";
-import { ChatService } from "./chat.service";
+import { ChatService } from "@chat/chat.service";
 import { Server, Socket } from "socket.io";
-import { SendMessageDto } from "./dto/send.message.dto";
+import { SendMessageDto } from "@chat/dto/send.message.dto";
 
 @WebSocketGateway()
 export class ChatGateway {

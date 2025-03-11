@@ -20,6 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@keyv/redis": "^4.3.1",
     "@nestjs/cache-manager": "^3.0.0",
     "@nestjs/common": "^11.0.10",
     "@nestjs/config": "^4.0.0",
@@ -32,19 +33,19 @@
     "@nestjs/websockets": "^11.0.10",
     "@prisma/client": "^6.4.1",
     "argon2": "^0.41.1",
-    "cache-manager": "^6.4.1",
-    "cache-manager-redis-yet": "^5.1.5",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "compression": "^1.8.0",
     "cors": "^2.8.5",
+    "express-rate-limit": "^7.5.0",
     "helmet": "^8.0.0",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "socket.io": "^4.8.1",
-    "socket.io-client": "^4.8.1"
+    "socket.io-client": "^4.8.1",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",

@@ -1,12 +1,12 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ConfigType } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
-import config from "src/config/config";
-import { UserService } from "src/user/user.service";
+import config from "@config/config";
+import { UserService } from "@user/user.service";
 import * as argon2 from "argon2";
-import { RegistrationDto } from "./dto/registration.dto";
-import { LoginDto } from "./dto/login.dto";
-import { ApiError } from "src/common/errors/apiError";
+import { RegistrationDto } from "@auth/dto/registration.dto";
+import { LoginDto } from "@auth/dto/login.dto";
+import { ApiError } from "@errors/apiError";
 import { User } from "@prisma/client";
 import { PrismaService } from "src/prisma.service";
 
@@ -65,6 +65,7 @@ export class AuthService {
       name,
       password,
       phoneNumber,
+      role,
       deviceName,
       os,
       appVersion,
@@ -76,6 +77,7 @@ export class AuthService {
       name,
       password: hashedPassword,
       phoneNumber,
+      role,
     });
     const tokens = await this.generateTokens(user);
 
@@ -97,13 +99,24 @@ export class AuthService {
     return await argon2.verify(hashedPassword, password);
   }
 
-  async logout(refreshToken: string) {
-    await this.prisma.session.deleteMany({ where: { refreshToken } });
+  async logout(refreshToken: string, allDevices: boolean) {
+    if (allDevices) {
+      const session = await this.prisma.session.findFirst({
+        where: { refreshToken },
+      });
+      if (session) {
+        await this.prisma.session.deleteMany({
+          where: { userId: session.userId },
+        });
+      }
+    } else {
+      await this.prisma.session.deleteMany({ where: { refreshToken } });
+    }
   }
 
   private async generateTokens(user: User) {
     const payload = {
-      userId: user.id,
+      sub: user.id,
       phoneNumber: user.phoneNumber,
       role: user.role,
     };
@@ -115,7 +128,7 @@ export class AuthService {
 
     const refreshToken = await this.jwtService.signAsync(payload, {
       secret: this.configService.secret,
-      expiresIn: this.configService.signOptions.refreshExpiresIn,
+      expiresIn: this.configService.refreshSignOptions.expiresIn,
     });
 
     return { accessToken, refreshToken };

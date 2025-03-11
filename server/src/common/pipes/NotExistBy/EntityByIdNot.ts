@@ -1,5 +1,5 @@
 import { Injectable, PipeTransform } from "@nestjs/common";
-import { ApiError } from "src/common/errors/apiError";
+import { ApiError } from "@errors/apiError";
 import { PrismaService } from "src/prisma.service";
 
 @Injectable()

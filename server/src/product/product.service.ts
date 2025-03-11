@@ -1,25 +1,49 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma.service";
-import { CreateProductDto } from "./dto/create.product.dto";
-import { UpdateProductDto } from "./dto/update.product.dto";
+import { CreateProductDto } from "@product/dto/create.product.dto";
+import { UpdateProductDto } from "@product/dto/update.product.dto";
+import { CACHE_MANAGER } from "@nestjs/cache-manager";
+import { Cache } from "cache-manager";
 
 @Injectable()
 export class ProductService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+    private readonly prisma: PrismaService
+  ) {}
 
   async createProduct(createProductDto: CreateProductDto) {
-    return this.prisma.product.create({ data: createProductDto });
+    const newProduct = await this.prisma.product.create({
+      data: createProductDto,
+    });
+
+    await this.cacheManager.del("products");
+
+    return newProduct;
   }
 
   async updateProduct(productId, updateProductDto: UpdateProductDto) {
-    return this.prisma.product.update({
+    const updatedProduct = await this.prisma.product.update({
       where: { id: productId },
       data: updateProductDto,
     });
+
+    await this.cacheManager.del(`product:${productId}`);
+    await this.cacheManager.del("products");
+
+    return updatedProduct;
   }
 
   async getAllProducts() {
-    return this.prisma.product.findMany();
+    const cashedProducts = await this.cacheManager.get("products");
+
+    if (cashedProducts) {
+      return cashedProducts;
+    }
+
+    const products = await this.prisma.product.findMany();
+    await this.cacheManager.set("products", products, 0);
+    return products;
   }
 
   async getRandomProducts(limit?: number) {
@@ -30,15 +54,29 @@ export class ProductService {
   }
 
   async getProductById(productId: number) {
-    return this.prisma.product.findUnique({
+    const cashedProduct = await this.cacheManager.get(`product:${productId}`);
+
+    if (cashedProduct) {
+      return cashedProduct;
+    }
+
+    const product = await this.prisma.product.findUnique({
       where: { id: productId },
     });
+
+    await this.cacheManager.set(`product:${productId}`, product, 3600);
+    return product;
   }
 
   async deleteProduct(productId: number) {
-    return this.prisma.product.delete({
+    const deletedProduct = await this.prisma.product.delete({
       where: { id: productId },
     });
+
+    await this.cacheManager.del(`product:${productId}`);
+    await this.cacheManager.del("products");
+
+    return deletedProduct;
   }
 
   async getProductsByCategoryWithSort(
@@ -100,12 +138,28 @@ export class ProductService {
   }
 
   async getUserFavouriteProducts(userId) {
-    return this.prisma.favourite_Product.findMany({
+    const cashedData = await this.cacheManager.get(`user:${userId}:favourites`);
+
+    if (cashedData) {
+      return cashedData;
+    }
+
+    const favourites = await this.prisma.favourite_Product.findMany({
       where: { userId },
     });
+    await this.cacheManager.set(`user:${userId}:favourites`, favourites, 3600);
+    return favourites;
   }
 
   async getCategories() {
-    return this.prisma.category.findMany();
+    const cashedCategories = await this.cacheManager.get("categories");
+
+    if (cashedCategories) {
+      return cashedCategories;
+    }
+
+    const categories = await this.prisma.category.findMany();
+    await this.cacheManager.set("categories", categories, 3600);
+    return categories;
   }
 }

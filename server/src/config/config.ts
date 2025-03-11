@@ -11,10 +11,16 @@ export default registerAs("config", () => ({
   secret: process.env.JWT_SECRET || "dely",
   signOptions: {
     expiresIn: process.env.JWT_ACCESS_EXPIRES_IN || "1d",
-    refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || "7d",
+  },
+  refreshSignOptions: {
+    expiresIn: process.env.JWT_REFRESH_EXPIRES_IN || "7d",
   },
   socket: {
     chatPort: process.env.SOCKET_CHAT_PORT || 3001,
+  },
+  redis: {
+    host: /* process.env.REDIS_HOST || */ "localhost",
+    port: /* process.env.REDIS_PORT  ||*/ 6379,
   },
   aws: {
     region: process.env.AWS_REGION || "us-east-1",
@@ -24,10 +30,6 @@ export default registerAs("config", () => ({
       bucket: process.env.AWS_S3_BUCKET_NAME || "dely-files",
       productImagesFolder: "products/",
       chatImagesFolder: "chats/",
-    },
-    elastiCache: {
-      host: /* process.env.REDIS_HOST || */ "localhost",
-      port: /* process.env.REDIS_PORT  ||*/ 6379,
     },
   },
 }));

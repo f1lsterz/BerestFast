@@ -1,33 +1,52 @@
-import { Injectable } from "@nestjs/common";
+import { OrderCacheKeys } from "@common/cache/order.keys";
+import { CACHE_MANAGER } from "@nestjs/cache-manager";
+import { Cache } from "cache-manager";
+import { Inject, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma.service";
 
 @Injectable()
 export class OrderService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+    private readonly prisma: PrismaService
+  ) {}
 
   async createOrder(userId: number, courierId: number, orderItems) {
-    return this.prisma.order.create({
+    const order = this.prisma.order.create({
       data: {
         userId,
         courierId,
       },
     });
+
+    await this.cacheManager.del(await OrderCacheKeys.getAllOrders());
+    return order;
   }
 
   async getOrderById(orderId: number) {
-    return this.prisma.order.findUnique({
+    const cacheKey = await OrderCacheKeys.getOrder(orderId);
+    const cachedOrder = await this.cacheManager.get(cacheKey);
+
+    if (cachedOrder) return cachedOrder;
+
+    const order = await this.prisma.order.findUnique({
       where: { id: orderId },
     });
+    await this.cacheManager.set(cacheKey, order, 3600);
   }
 
   async cancelOrder(orderId: number) {
-    return this.prisma.order.update({
+    const cacheKey = await OrderCacheKeys.getOrder(orderId);
+    const updatedOrder = await this.prisma.order.update({
       where: { id: orderId },
       data: {
         status: "CANCELLED",
         completedAt: new Date(),
       },
     });
+
+    await this.cacheManager.del(cacheKey);
+    return updatedOrder;
   }
 
   async acceptOrder(orderId: number) {

@@ -9,17 +9,18 @@ import {
   Patch,
   Post,
 } from "@nestjs/common";
-import { UserService } from "./user.service";
-import { CreateUserDto } from "./dto/create.user.dto";
-import { UpdateUserDto } from "./dto/update.user.dto";
-import { UserByIdNotPipe } from "src/common/pipes/NotExistBy/UserByIdNot";
+import { UserService } from "@user/user.service";
+import { CreateUserDto } from "@user/dto/create.user.dto";
+import { UpdateUserDto } from "@user/dto/update.user.dto";
+import { UserByIdNotPipe } from "@pipes/NotExistBy/UserByIdNot";
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { User } from "src/common/types/user.response";
-import { Session } from "src/common/types/session.response";
-import { UpdateSessionDto } from "./dto/update.session.dto";
-import { SessionByIdNotPipe } from "src/common/pipes/NotExistBy/SessionByIdNot";
-import { CreateSessionDto } from "./dto/create.session.dto";
-import { UniquePhoneNumberPipe } from "src/common/pipes/ExistBy/UserByPhone";
+import { User } from "@resTypes/user.response";
+import { Session } from "@resTypes/session.response";
+import { UpdateSessionDto } from "@user/dto/update.session.dto";
+import { SessionByIdNotPipe } from "@pipes/NotExistBy/SessionByIdNot";
+import { CreateSessionDto } from "@user/dto/create.session.dto";
+import { UniquePhoneNumberPipe } from "@pipes/ExistBy/UserByPhone";
+import { Access } from "@decorators/access.decorator";
 
 @ApiTags("Users")
 @Controller("users")
@@ -32,6 +33,7 @@ export class UserController {
   @ApiParam({ name: "userId", required: true, description: "User ID" })
   @ApiResponse({ status: HttpStatus.OK, description: "User found", type: User })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: "User not found" })
+  @Access()
   async getUserById(@Param("userId", UserByIdNotPipe) userId: number) {
     return await this.userService.getUserById(userId);
   }
@@ -46,6 +48,7 @@ export class UserController {
   })
   @ApiResponse({ status: HttpStatus.OK, description: "User found", type: User })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: "User not found" })
+  @Access()
   async getUserByPhone(@Param("phoneNumber") phoneNumber: string) {
     return await this.userService.getUserByPhone(phoneNumber);
   }
@@ -58,8 +61,9 @@ export class UserController {
     description: "List of users",
     type: [User],
   })
+  @Access("ADMIN")
   async getAllUsers() {
-    return await this.userService.getAllUsers();
+    return this.userService.getAllUsers();
   }
 
   @Post()
@@ -71,7 +75,7 @@ export class UserController {
     type: User,
   })
   async createUser(@Body(UniquePhoneNumberPipe) createUserDto: CreateUserDto) {
-    return await this.userService.createUser(createUserDto);
+    return this.userService.createUser(createUserDto);
   }
 
   @Patch(":userId")
@@ -80,6 +84,7 @@ export class UserController {
   @ApiParam({ name: "userId", required: true, description: "User ID" })
   @ApiResponse({ status: HttpStatus.NO_CONTENT, description: "User updated" })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: "User not found" })
+  @Access()
   async updateUser(
     @Param("userId", UserByIdNotPipe) userId: number,
     @Body() updateUserDto: UpdateUserDto
@@ -93,6 +98,7 @@ export class UserController {
   @ApiParam({ name: "userId", required: true, description: "User ID" })
   @ApiResponse({ status: HttpStatus.NO_CONTENT, description: "User deleted" })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: "User not found" })
+  @Access("Admin")
   async deleteUser(@Param("userId", UserByIdNotPipe) userId: number) {
     return await this.userService.deleteUser(userId);
   }
@@ -106,6 +112,7 @@ export class UserController {
     description: "Session created",
     type: Session,
   })
+  @Access()
   async createUserSession(
     @Param("userId", UserByIdNotPipe) userId: number,
     createSessionDto: CreateSessionDto
@@ -115,13 +122,14 @@ export class UserController {
 
   @Patch(":sessionId/sessions")
   @HttpCode(200)
-  @ApiOperation({ summary: "Create a new user session" })
+  @ApiOperation({ summary: "Update an user session" })
   @ApiParam({ name: "sessionId", required: true, description: "Session ID" })
   @ApiResponse({
     status: HttpStatus.CREATED,
-    description: "Session created",
+    description: "Session updated",
     type: Session,
   })
+  @Access("Admin")
   async updateUserSession(
     @Param("sessionId", SessionByIdNotPipe) sessionId: number,
     updateSessionDto: UpdateSessionDto
@@ -141,6 +149,7 @@ export class UserController {
     description: "List of sessions",
     type: [Session],
   })
+  @Access()
   async getUserSessions(@Param("userId", UserByIdNotPipe) userId: number) {
     return await this.userService.getUserSessions(userId);
   }
@@ -153,6 +162,7 @@ export class UserController {
     status: HttpStatus.NO_CONTENT,
     description: "Sessions deleted",
   })
+  @Access()
   async deleteUserSessions(@Param("userId", UserByIdNotPipe) userId: number) {
     return await this.userService.deleteUserSessions(userId);
   }
@@ -164,6 +174,7 @@ export class UserController {
     status: HttpStatus.NO_CONTENT,
     description: "Session deleted",
   })
+  @Access()
   async deleteUserSession(
     @Param("sessionId", SessionByIdNotPipe) sessionId: number
   ) {

@@ -9,7 +9,7 @@ import {
   Query,
   HttpCode,
 } from "@nestjs/common";
-import { OrderService } from "./order.service";
+import { OrderService } from "@order/order.service";
 import {
   ApiOperation,
   ApiResponse,
@@ -17,8 +17,8 @@ import {
   ApiBody,
   ApiTags,
 } from "@nestjs/swagger";
-import { CreateOrderDto } from "./dto/create.order.dto";
-import { CreateReviewDto } from "./dto/create.review.dto";
+import { CreateOrderDto } from "@order/dto/create.order.dto";
+import { CreateReviewDto } from "@order/dto/create.review.dto";
 
 @ApiTags("Orders")
 @Controller("orders")
