@@ -8,11 +8,11 @@ import {
   Platform,
   Keyboard,
 } from "react-native";
-import style from "./style";
+import style from "../sign-in-password/style";
 import LockIcon from "@client/common/svg/lock-icon";
 import { useRouter } from "expo-router";
 
-const SingInAuthPassword = () => {
+const SingUpAuthPassword = () => {
   const [password, setPassword] = useState("");
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
@@ -48,7 +48,7 @@ const SingInAuthPassword = () => {
     >
       <View style={style.mainContainer}>
         <Text style={style.textArticleStyle}>Введіть пароль</Text>
-
+        <Text style={style.descriptionText}>щоб зареєєструватися</Text>
         <View>
           <View style={style.textInputContainer}>
             <View style={{ marginLeft: 10 }}>
@@ -66,12 +66,9 @@ const SingInAuthPassword = () => {
               blurOnSubmit={false}
             />
           </View>
-          <TouchableOpacity>
-            <Text style={style.forgotTextStyle}>Забули пароль?</Text>
-          </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={style.singInButton}>
+        <TouchableOpacity onPress={handeleOnPress} style={style.singInButton}>
           <Text>Увійти</Text>
         </TouchableOpacity>
       </View>
@@ -79,4 +76,4 @@ const SingInAuthPassword = () => {
   );
 };
 
-export default SingInAuthPassword;
+export default SingUpAuthPassword;

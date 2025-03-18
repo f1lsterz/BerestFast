@@ -43,7 +43,6 @@ const VerificationScreen = () => {
     };
   }, []);
 
-  // Таймер на повторне відправлення коду
   useEffect(() => {
     if (timer > 0) {
       const interval = setInterval(() => {
@@ -59,13 +58,15 @@ const VerificationScreen = () => {
     if (canResend) {
       setTimer(60);
       setCanResend(false);
-      // Логіка повторної відправки коду
-      console.log("Код повторно надіслано");
     }
   };
 
   const handleOnPress = () => {
-    router.navigate(`authorization/sign-in?status=${status}`);
+    if(status ===" ign-in"){
+      router.navigate(`authorization/sign-in-password?status=${status}`);
+    }else{
+      router.navigate(`authorization/sign-up-password?status=${status}`);
+    }
   };
 
   return (

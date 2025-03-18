@@ -13,7 +13,7 @@ const ButtonAuthList = () => {
     <View style={style.buttonListContainer}>
       <TouchableOpacity
         onPress={() =>
-          router.navigate(`authorization/code-page?status=${statusForSignIn}`)
+          router.navigate(`authorization/sign-in?status=${statusForSignIn}`)
         }
         style = {style.signInButton}
       >
@@ -22,7 +22,7 @@ const ButtonAuthList = () => {
 
       <TouchableOpacity
         onPress={() =>
-          router.navigate(`authorization/code-page??status=${statusForSignUp}`)
+          router.navigate(`authorization/sign-up?status=${statusForSignUp}`)
         }
         style = {style.signUpButton}
       >

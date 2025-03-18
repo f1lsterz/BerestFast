@@ -1,9 +1,8 @@
 import React from "react";
-import { View, SafeAreaView } from "react-native";
-import style from "./style";
 import { useLocalSearchParams } from "expo-router";
-import HeaderComponent from "../header-component";
-import SingInAuthPassword from "./components/sign-in-password";
+import MainContainer from "../main-container";
+import PhoneLoginScreen from "./components/sign-in";
+import PhoneSignUpScreen from "./components/sign-up";
 
 const AuthorizationPage = () => {
   const params = useLocalSearchParams();
@@ -12,11 +11,10 @@ const AuthorizationPage = () => {
   status += params.status;
 
   return (
-    <SafeAreaView style={style.safeArea}>
-      <View style={style.mainContainer}>
-        <HeaderComponent />
-      </View>
-    </SafeAreaView>
+    <MainContainer>
+      {status === "sign-in" && <PhoneLoginScreen />}
+      {status === "sing-up" && <PhoneSignUpScreen />}
+    </MainContainer>
   );
 };
 

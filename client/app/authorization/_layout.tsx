@@ -1,4 +1,4 @@
-import { Stack } from "expo-router";
+import { Stack ,Slot  } from "expo-router";
 
 export default function Layout() {
   return (
@@ -6,7 +6,10 @@ export default function Layout() {
       <Stack.Screen name="sign-up/index" options={{ headerShown: false }} />
       <Stack.Screen name="sign-in/index" options={{ headerShown: false }} />
       <Stack.Screen name="code-page/index" options={{ headerShown: false }} />
-      <Stack.Screen name="auth-password-page/index" options={{ headerShown: false }} />
+      <Stack.Screen name="sign-in-password/index" options={{ headerShown: false }} />
+      <Stack.Screen name="sign-up-password/index" options={{ headerShown: false }} />
+      <Stack.Screen name="auth-user-profile-page/index" options={{ headerShown: false }} />
+      <Slot />
     </Stack>
   );
 }

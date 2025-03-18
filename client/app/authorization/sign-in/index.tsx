@@ -5,10 +5,6 @@ import { useRouter } from "expo-router";
 import AuthorizationPage from "@client/common/components/authorization-page";
 
 const SignIn = () => {
-
-  const router = useRouter();
-
-
   return (
     <View style={style.container}>
       <AuthorizationPage></AuthorizationPage>
