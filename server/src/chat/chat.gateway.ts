@@ -8,20 +8,35 @@ import {
 import { ChatService } from "@chat/chat.service";
 import { Server, Socket } from "socket.io";
 import { SendMessageDto } from "@chat/dto/send.message.dto";
+import { UploadedFile } from "@nestjs/common";
+import { AWSService } from "src/aws/aws.service";
 
 @WebSocketGateway()
 export class ChatGateway {
-  constructor(private readonly chatService: ChatService) {}
+  constructor(
+    private readonly chatService: ChatService,
+    private readonly awsService: AWSService
+  ) {}
 
   @WebSocketServer()
   server: Server;
 
   @SubscribeMessage("sendMessage")
   async handleSendMessage(
-    @MessageBody() sendMessageDto: SendMessageDto
-    //@ConnectedSocket() client: Socket
+    @MessageBody() sendMessageDto: SendMessageDto,
+    @UploadedFile() file?: Express.Multer.File
   ) {
-    const message = await this.chatService.sendMessage(sendMessageDto);
+    let imageUrl: string | undefined = undefined;
+
+    if (file) {
+      imageUrl = await this.awsService.uploadChatImage(file);
+    }
+
+    const message = await this.chatService.sendMessage({
+      ...sendMessageDto,
+      imageUrl,
+    });
+
     this.server.to(`chat_${sendMessageDto.chatId}`).emit("newMessage", message);
   }
 

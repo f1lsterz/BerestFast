@@ -15,7 +15,8 @@ model Chat {
 
 model Message {
     id Int @id @default(autoincrement())
-    content String
+    content String?
+    imageUrl String? @map("media_url")
 
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @updatedAt @map("updated_at")

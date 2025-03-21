@@ -5,9 +5,14 @@ import { UserModule } from "@user/user.module";
 import { JwtModule } from "@nestjs/jwt";
 import config from "@config/config";
 import { JwtStrategy } from "@strategies/jwt.strategy";
+//import { FirebaseModule } from "src/firebase/firebase.module";
 
 @Module({
-  imports: [JwtModule.registerAsync(config.asProvider()), UserModule],
+  imports: [
+    JwtModule.registerAsync(config.asProvider()),
+    UserModule,
+    //FirebaseModule,
+  ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
 })

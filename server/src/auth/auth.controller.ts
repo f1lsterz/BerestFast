@@ -6,11 +6,15 @@ import { RegistrationDto } from "@auth/dto/registration.dto";
 import { LogoutDto } from "@auth/dto/logout.dto";
 import { RefreshTokenDto } from "@auth/dto/refresh.token.dto";
 import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
+//import { FirebaseService } from "src/firebase/firebase.service";
 
 @ApiTags("Authentication")
 @Controller("auth")
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService
+    //private readonly firebaseService: FirebaseService
+  ) {}
 
   @Post("registration")
   @HttpCode(201)
@@ -55,4 +59,17 @@ export class AuthController {
       logoutDto.allDevices
     );
   }
+
+  /*   @Post("send-otp")
+  async sendOTP(@Body("phoneNumber") phoneNumber: string) {
+    return await this.firebaseService.sendOTP(phoneNumber);
+  }
+
+  @Post("verify-otp")
+  async verifyOTP(
+    @Body("session") session: string,
+    @Body("otpCode") otpCode: string
+  ) {
+    return await this.firebaseService.verifyOTP(session, otpCode);
+  } */
 }

@@ -19,6 +19,8 @@ import {
 } from "@nestjs/swagger";
 import { CreateOrderDto } from "@order/dto/create.order.dto";
 import { CreateReviewDto } from "@order/dto/create.review.dto";
+import { Access } from "@common/decorators/access.decorator";
+import { Role } from "@prisma/client";
 
 @ApiTags("Orders")
 @Controller("orders")
@@ -31,6 +33,7 @@ export class OrderController {
   @ApiBody({ type: CreateOrderDto })
   @ApiResponse({ status: 201, description: "" })
   @ApiResponse({ status: 400, description: "" })
+  @Access()
   async createOrder(
     @Param("userId") userId: number,
     @Param("courierId") courierId: number,
@@ -44,6 +47,7 @@ export class OrderController {
   @ApiResponse({ status: 200, description: "Замовлення знайдено." })
   @ApiResponse({ status: 404, description: "Замовлення не знайдено." })
   @Get(":orderId")
+  @Access()
   async getOrderById(@Param("orderId") orderId: number) {
     return this.orderService.getOrderById(orderId);
   }
@@ -53,6 +57,7 @@ export class OrderController {
   @ApiResponse({ status: 200, description: "Замовлення скасовано." })
   @ApiResponse({ status: 404, description: "Замовлення не знайдено." })
   @Put(":orderId/cancel")
+  @Access()
   async cancelOrder(@Param("orderId") orderId: number) {
     return this.orderService.cancelOrder(orderId);
   }
@@ -62,6 +67,7 @@ export class OrderController {
   @ApiResponse({ status: 200, description: "Замовлення прийнято." })
   @ApiResponse({ status: 404, description: "Замовлення не знайдено." })
   @Put(":orderId/accept")
+  @Access(Role.ADMIN, Role.COURIER)
   async acceptOrder(@Param("orderId") orderId: number) {
     return this.orderService.acceptOrder(orderId);
   }
@@ -71,6 +77,7 @@ export class OrderController {
   @ApiResponse({ status: 200, description: "Список замовлень користувача." })
   @ApiResponse({ status: 404, description: "Замовлення не знайдено." })
   @Get("user/:userId")
+  @Access()
   async getUserOrders(@Param("userId") userId: number) {
     return this.orderService.getUserOrders(userId);
   }
@@ -81,6 +88,7 @@ export class OrderController {
   @ApiResponse({ status: 201, description: "Відгук додано." })
   @ApiResponse({ status: 400, description: "Некоректний відгук." })
   @Post(":orderId/review")
+  @Access()
   async addOrderReview(
     @Param("orderId") orderId: number,
     @Body() reviewData: any

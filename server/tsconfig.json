@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "strict": false,
+    "esModuleInterop": true,
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
@@ -29,6 +31,7 @@
       "@user/*": ["src/user/*"]
     },
     "incremental": true,
+    "resolveJsonModule": true,
     "skipLibCheck": true,
     "strictNullChecks": true,
     "forceConsistentCasingInFileNames": true,

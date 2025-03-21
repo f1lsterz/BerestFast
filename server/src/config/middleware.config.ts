@@ -5,14 +5,9 @@ import cors from "cors";
 import rateLimit from "express-rate-limit";
 
 export function setupMiddlewares(app: INestApplication) {
-  app.use(cors());
+  /* app.use(cors());
 
-  app.use(
-    helmet({
-      contentSecurityPolicy: false, // Вимикаємо CSP (не потрібен для API)
-      referrerPolicy: { policy: "no-referrer" }, // Приховує реферер
-    })
-  );
+  app.use(helmet());
 
   app.use(
     rateLimit({
@@ -27,5 +22,5 @@ export function setupMiddlewares(app: INestApplication) {
       level: 6, // Оптимальний рівень стиснення
       threshold: 1024, // Стискати тільки якщо відповідь > 1KB
     })
-  );
+  ); */
 }

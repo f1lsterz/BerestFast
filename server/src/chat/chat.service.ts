@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma.service";
 import { SendMessageDto } from "@chat/dto/send.message.dto";
 import { CreateChatDto } from "@chat/dto/create.chat.dto";
+import { ApiError } from "@common/errors/apiError";
 
 @Injectable()
 export class ChatService {
@@ -20,27 +21,43 @@ export class ChatService {
   }
 
   async sendMessage(sendMessageDto: SendMessageDto) {
+    if (!sendMessageDto.content && !sendMessageDto.imageUrl) {
+      throw ApiError.BadRequest(
+        "Повідомлення має містити текст або зображення"
+      );
+    }
     return this.prisma.message.create({
       data: {
         chatId: sendMessageDto.chatId,
         userId: sendMessageDto.userId,
         content: sendMessageDto.content,
+        imageUrl: sendMessageDto.imageUrl,
       },
       include: { user: true },
     });
   }
 
-  async getMessages(chatId: number) {
+  async getMessages(chatId: number, page = 1, limit = 20) {
     return this.prisma.message.findMany({
       where: { chatId },
       include: { user: true },
+      orderBy: { createdAt: "desc" },
+      skip: (page - 1) * limit,
+      take: limit,
     });
   }
 
   async getUserChats(userId: number) {
     return this.prisma.chat.findMany({
       where: { participants: { some: { userId } } },
-      include: { messages: true, participants: true },
+      include: {
+        messages: {
+          take: 1,
+          orderBy: { createdAt: "desc" },
+          include: { user: true },
+        },
+        participants: true,
+      },
     });
   }
 }

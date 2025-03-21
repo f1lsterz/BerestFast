@@ -1,4 +1,4 @@
-import { IsInt, IsString } from "class-validator";
+import { IsInt, IsOptional, IsString, IsUrl } from "class-validator";
 
 export class SendMessageDto {
   @IsInt()
@@ -8,5 +8,10 @@ export class SendMessageDto {
   userId: number;
 
   @IsString()
-  content: string;
+  @IsOptional()
+  content?: string;
+
+  @IsOptional()
+  @IsUrl({}, { message: "Incorrect URL" })
+  imageUrl?: string;
 }

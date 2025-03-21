@@ -14,8 +14,16 @@ export class PaymentService {
     private readonly configService: ConfigService
   ) {}
 
-  async createPayment(userId, amount, paymentMethod) {
-    const paymentId = uuidv4();
+  async createPayment(userId, orderId, amount, paymentMethod) {
+    const payment = await this.prisma.payment.create({
+      data: {
+        userId,
+        orderId,
+        amount,
+        method: paymentMethod.toUpperCase(),
+        status: "PENDING",
+      },
+    });
 
     switch (paymentMethod) {
       case "google_pay":
@@ -38,19 +46,19 @@ export class PaymentService {
     });
   }
 
+  async cancelPayment(paymentId: number) {
+    return this.prisma.payment.update({
+      where: { id: paymentId },
+      data: { status: "CANCELLED" },
+    });
+  }
+
   async getUserPayments(userId: number) {
     return this.prisma.payment.findMany({ where: { userId } });
   }
 
   async getPaymentStatus(paymentId: number) {
     return this.prisma.payment.findUnique({ where: { id: paymentId } });
-  }
-
-  async cancelPayment(paymentId: number) {
-    return this.prisma.payment.update({
-      where: { id: paymentId },
-      data: { status: "CANCELLED" },
-    });
   }
 
   async getAllPayments() {
@@ -63,5 +71,12 @@ export class PaymentService {
 
   private async processMonobank() {}
 
-  private async processPrivatbank() {}
+  /* private async processPrivatbank() {
+    const privatBankApiUrl = this.configService.get("PRIVATBANK_API_URL");
+    const response = await fetch(`${privatBankApiUrl}/payment`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ paymentId, amount }),
+    });
+  } */
 }

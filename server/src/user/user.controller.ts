@@ -21,6 +21,7 @@ import { SessionByIdNotPipe } from "@pipes/NotExistBy/SessionByIdNot";
 import { CreateSessionDto } from "@user/dto/create.session.dto";
 import { UniquePhoneNumberPipe } from "@pipes/ExistBy/UserByPhone";
 import { Access } from "@decorators/access.decorator";
+import { Role } from "@prisma/client";
 
 @ApiTags("Users")
 @Controller("users")
@@ -61,7 +62,7 @@ export class UserController {
     description: "List of users",
     type: [User],
   })
-  @Access("ADMIN")
+  @Access(Role.ADMIN)
   async getAllUsers() {
     return this.userService.getAllUsers();
   }
@@ -98,7 +99,7 @@ export class UserController {
   @ApiParam({ name: "userId", required: true, description: "User ID" })
   @ApiResponse({ status: HttpStatus.NO_CONTENT, description: "User deleted" })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: "User not found" })
-  @Access("Admin")
+  @Access(Role.ADMIN)
   async deleteUser(@Param("userId", UserByIdNotPipe) userId: number) {
     return await this.userService.deleteUser(userId);
   }
@@ -129,7 +130,7 @@ export class UserController {
     description: "Session updated",
     type: Session,
   })
-  @Access("Admin")
+  @Access(Role.ADMIN)
   async updateUserSession(
     @Param("sessionId", SessionByIdNotPipe) sessionId: number,
     updateSessionDto: UpdateSessionDto
