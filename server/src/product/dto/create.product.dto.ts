@@ -1,6 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { UnitType } from "@prisma/client";
 import {
   IsDecimal,
+  IsEnum,
   IsInt,
   IsNotEmpty,
   IsOptional,
@@ -42,6 +44,15 @@ export class CreateProductDto {
   //@IsUrl()
   @IsNotEmpty()
   image_url: string;
+
+  @ApiProperty({
+    description: "Одиниця вимірювання продукту",
+    example: "PIECE",
+    enum: UnitType,
+  })
+  @IsEnum(UnitType)
+  @IsNotEmpty()
+  unit: UnitType;
 
   @ApiPropertyOptional({
     description: "ID категорії продукту (необов'язково)",
