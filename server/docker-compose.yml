@@ -1,6 +1,20 @@
 version: "3.8"
 
 services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: dely
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    volumes:
+      - mysql_data:/var/lib/mysql
+
   redis:
     image: redis:latest
     container_name: redis_cache
@@ -12,5 +26,7 @@ services:
     command: redis-server --save 60 1 --loglevel warning
 
 volumes:
+  mysql_data:
+    driver: local
   redis_data:
     driver: local
