@@ -1,4 +1,4 @@
-export type Role = "USER" | "ADMIN" | "COURIER";
+import { Role } from "models/role";
 
 export interface CreateUserDto {
   name: string;

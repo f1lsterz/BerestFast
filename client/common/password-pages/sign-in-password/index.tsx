@@ -10,28 +10,30 @@ import {
 import style from "./style";
 import LockIcon from "common/svg/lock-icon";
 import { useRouter } from "expo-router";
-import AuthServices from "services/fetches/AuthServices";
-import { CreateUserDto } from "DTOs/userDTOs/CreateUserDto";
+import AuthServise from "services/fetches/AuthServise";
+import { RegistrationDto } from "DTOs/loginDTOs/registrationDto";
 
 const SingInAuthPassword = () => {
   const [password, setPassword] = useState("");
   const router = useRouter();
 
-  const [newUser, setNewUser] = useState<CreateUserDto>({
-    name: "VIVA Doe",
-    phoneNumber: "+380990362418",
-    password: "password123",
+  const [newUser, setNewUser] = useState<RegistrationDto>({
+    name: "John Doe",
+    password: "securepassword123",
+    phoneNumber: "+380990562418",
     role: "USER",
+    deviceName: "iPhone 13 Pro",
+    os: "iOS 17.3",
+    appVersion: "1.2.5",
+    ipAddress: "192.168.1.1", 
   });
 
   const handleCreateUser = async () => {
-    console.log("123")
     try {
-      const response = await AuthServices.createUser(newUser);
-      console.log("User created:", response);
+      const response = await AuthServise.register(newUser);
+      console.log("User registered:", response);
     } catch (error) {
-      console.error("Error creating user:", error);
-      console.log(JSON.stringify(error))
+      console.error("Error registering user:", error);
     }
   };
 

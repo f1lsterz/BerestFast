@@ -5,7 +5,7 @@ import { UpdateUserDto } from "DTOs/userDTOs/UpdateUserDto";
 import { UpdateSessionDto } from "DTOs/userDTOs/UpdateSessionDto";
 import { BASE_URL } from "./CustomFetchServices";
 
-class AuthService {
+class UserService {
   private readonly basePath = "/users"; 
 
   async getUserById(userId: number) {
@@ -21,7 +21,7 @@ class AuthService {
   }
 
   async createUser(data: CreateUserDto) {
-    return CustomFetchServices.post(`http://192.168.0.107:3000/users`, data);
+    return CustomFetchServices.post(`${BASE_URL}${this.basePath}`, data);
   }
 
   async updateUser(userId: number, data: UpdateUserDto) {
@@ -53,4 +53,4 @@ class AuthService {
   }
 }
 
-export default new AuthService();
+export default new UserService();
