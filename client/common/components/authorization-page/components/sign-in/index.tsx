@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import style from "./style";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import PhoneIcon from "@client/common/svg/phone-svg";
+import PhoneIcon from "common/svg/phone-svg";
 
 const PhoneLoginScreen = () => {
   const params = useLocalSearchParams();
@@ -40,7 +40,7 @@ const PhoneLoginScreen = () => {
   }, []);
 
   const handleNext = () => {
-    router.navigate(`/authorization/code-page?status=${status}`);
+    router.navigate(`/authorization/sign-in-password?status=${status}`);
   };
   
 

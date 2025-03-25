@@ -1,23 +1,44 @@
 import { StyleSheet, Dimensions } from "react-native";
-import { Colors } from "@client/common/enum/colors";
+import { Colors } from "common/enum/colors";
 
 const { width, height } = Dimensions.get("window");
 
 const style = StyleSheet.create({
   styleArticleText: {
-    color: Colors.Yellow || "#FFC618",
-    fontSize: 18,
-    fontWeight: "bold",
-    textAlign: "center",
-    padding: 10,
-    borderRadius: 8,
-    width: width * 0.9,
-    marginBottom: 20,
+    color: Colors.White,
+    fontSize: 40,
   },
   textContainer: {
     alignItems: "center",
-    marginTop: 20,
-    padding: 20,
+    justifyContent: "space-around",
+    marginTop: height * 0.02,
+  },
+
+  textInputContainer: {
+    marginLeft: width * 0.03,
+    display: "flex",
+    flexDirection: "row",
+    width: width * 0.9,
+    height: height * 0.06,
+    marginTop: height * 0.04,
+    alignItems: "center",
+  },
+
+  textInput: {
+    width: width * 0.77,
+    height: height * 0.06,
+    marginLeft: 5,
+    fontSize: 20,
+    color: "white",
+  },
+  agreeCodeButton: {
+    justifyContent: "center",
+    height: height * 0.07,
+    alignItems: "center",
+    backgroundColor: Colors.White,
+    width: width * 0.9,
+    borderRadius: 40,
+    marginTop: height*0.15,
   },
 });
 

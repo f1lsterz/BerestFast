@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { Colors } from "@client/common/enum/colors";
+import { Colors } from "common/enum/colors";
 
 const style = StyleSheet.create({
   mainContainer: {

@@ -9,6 +9,7 @@ export default function Layout() {
       <Stack.Screen name="sign-in-password/index" options={{ headerShown: false }} />
       <Stack.Screen name="sign-up-password/index" options={{ headerShown: false }} />
       <Stack.Screen name="auth-user-profile-page/index" options={{ headerShown: false }} />
+      <Stack.Screen name="forgot-password/index" options={{ headerShown: false }} />
       <Slot />
     </Stack>
   );

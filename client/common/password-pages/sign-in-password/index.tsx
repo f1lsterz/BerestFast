@@ -6,40 +6,34 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
-  Keyboard,
 } from "react-native";
 import style from "./style";
-import LockIcon from "@client/common/svg/lock-icon";
+import LockIcon from "common/svg/lock-icon";
 import { useRouter } from "expo-router";
+import AuthServices from "services/fetches/AuthServices";
+import { CreateUserDto } from "DTOs/userDTOs/CreateUserDto";
 
 const SingInAuthPassword = () => {
   const [password, setPassword] = useState("");
-  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-
-  const passwordInputRef = useRef<TextInput>(null);
   const router = useRouter();
 
-  useEffect(() => {
-    setTimeout(() => {
-      passwordInputRef.current?.focus();
-    }, 10); // мінімальна затримка для коректного фокусу
-    const keyboardShowListener = Keyboard.addListener("keyboardDidShow", () =>
-      setKeyboardVisible(true)
-    );
-    // Відстеження статусу клавіатури
-    const keyboardHideListener = Keyboard.addListener("keyboardDidHide", () =>
-      setKeyboardVisible(false)
-    );
+  const [newUser, setNewUser] = useState<CreateUserDto>({
+    name: "VIVA Doe",
+    phoneNumber: "+380990362418",
+    password: "password123",
+    role: "USER",
+  });
 
-    return () => {
-      keyboardShowListener.remove();
-      keyboardHideListener.remove();
-    };
-  }, []);
-
-  const handeleOnPress = ()=>{
-    router.navigate(`authorization/auth-user-profile-page`);
-  }
+  const handleCreateUser = async () => {
+    console.log("123")
+    try {
+      const response = await AuthServices.createUser(newUser);
+      console.log("User created:", response);
+    } catch (error) {
+      console.error("Error creating user:", error);
+      console.log(JSON.stringify(error))
+    }
+  };
 
   return (
     <KeyboardAvoidingView
@@ -55,7 +49,7 @@ const SingInAuthPassword = () => {
               <LockIcon />
             </View>
             <TextInput
-              ref={passwordInputRef}
+              autoFocus={true}
               style={style.textInput}
               placeholder="Введіть пароль"
               placeholderTextColor="white"
@@ -71,7 +65,7 @@ const SingInAuthPassword = () => {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={style.singInButton}>
+        <TouchableOpacity onPress={handleCreateUser} style={style.singInButton}>
           <Text>Увійти</Text>
         </TouchableOpacity>
       </View>

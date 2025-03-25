@@ -9,37 +9,16 @@ import {
   Keyboard,
 } from "react-native";
 import style from "../sign-in-password/style";
-import LockIcon from "@client/common/svg/lock-icon";
+import LockIcon from "common/svg/lock-icon";
 import { useRouter } from "expo-router";
 
 const SingUpAuthPassword = () => {
   const [password, setPassword] = useState("");
-  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-
-  const passwordInputRef = useRef<TextInput>(null);
   const router = useRouter();
 
-  useEffect(() => {
-    setTimeout(() => {
-      passwordInputRef.current?.focus();
-    }, 10); // мінімальна затримка для коректного фокусу
-    const keyboardShowListener = Keyboard.addListener("keyboardDidShow", () =>
-      setKeyboardVisible(true)
-    );
-    // Відстеження статусу клавіатури
-    const keyboardHideListener = Keyboard.addListener("keyboardDidHide", () =>
-      setKeyboardVisible(false)
-    );
-
-    return () => {
-      keyboardShowListener.remove();
-      keyboardHideListener.remove();
-    };
-  }, []);
-
-  const handeleOnPress = ()=>{
+  const handeleOnPress = () => {
     router.navigate(`authorization/auth-user-profile-page`);
-  }
+  };
 
   return (
     <KeyboardAvoidingView
@@ -55,7 +34,7 @@ const SingUpAuthPassword = () => {
               <LockIcon />
             </View>
             <TextInput
-              ref={passwordInputRef}
+              autoFocus={true}
               style={style.textInput}
               placeholder="Введіть пароль"
               placeholderTextColor="white"

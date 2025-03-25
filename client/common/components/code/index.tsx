@@ -9,39 +9,20 @@ import {
   Keyboard,
 } from "react-native";
 import style from "./style";
-import UserIcon from "@client/common/svg/user-icon";
+import UserIcon from "common/svg/user-icon";
 import MainContainer from "../main-container";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
 const VerificationScreen = () => {
   const [code, setCode] = useState("");
-  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [timer, setTimer] = useState(60);
   const [canResend, setCanResend] = useState(false);
   const params = useLocalSearchParams();
   let status: string = "";
   status += params.status;
-
-  const codeInputRef = useRef<TextInput>(null);
   const router = useRouter();
 
-  useEffect(() => {
-    requestAnimationFrame(() => {
-      codeInputRef.current?.focus();
-    });
-
-    const keyboardShowListener = Keyboard.addListener("keyboardDidShow", () =>
-      setKeyboardVisible(true)
-    );
-    const keyboardHideListener = Keyboard.addListener("keyboardDidHide", () =>
-      setKeyboardVisible(false)
-    );
-
-    return () => {
-      keyboardShowListener.remove();
-      keyboardHideListener.remove();
-    };
-  }, []);
+ 
 
   useEffect(() => {
     if (timer > 0) {
@@ -89,7 +70,7 @@ const VerificationScreen = () => {
               <UserIcon />
             </View>
             <TextInput
-              ref={codeInputRef}
+              autoFocus={true} 
               style={style.textInput}
               placeholder="Введіть код"
               placeholderTextColor="white"

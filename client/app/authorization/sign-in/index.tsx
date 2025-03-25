@@ -1,8 +1,7 @@
 import React from "react";
 import { Text, View } from "react-native";
 import style from "./style";
-import { useRouter } from "expo-router";
-import AuthorizationPage from "@client/common/components/authorization-page";
+import AuthorizationPage from "common/components/authorization-page";
 
 const SignIn = () => {
   return (

@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import style from "../sign-in/style";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import PhoneIcon from "@client/common/svg/phone-svg";
+import PhoneIcon from "common/svg/phone-svg";
 
 const PhoneSignUpScreen = () => {
   const params = useLocalSearchParams();
