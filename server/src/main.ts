@@ -1,10 +1,10 @@
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { ConfigService } from "@nestjs/config";
-import { ApiErrorFilter } from "@filters/validation.filter";
-import { validationConfig } from "@config/validation.config";
+import { ApiErrorFilter } from "./common/filters/validation.filter";
+import { validationConfig } from "./config/validation.config";
 import { SwaggerModule } from "@nestjs/swagger";
-import { swaggerConfig } from "@config/swagger.config";
+import { swaggerConfig } from "./config/swagger.config";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

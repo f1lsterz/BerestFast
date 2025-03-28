@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { PrismaService } from "src/prisma.service";
-import { CreateProductDto } from "@product/dto/create.product.dto";
-import { UpdateProductDto } from "@product/dto/update.product.dto";
+import { PrismaService } from "../prisma.service";
+import { CreateProductDto } from "./dto/create.product.dto";
+import { UpdateProductDto } from "./dto/update.product.dto";
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import { Cache } from "cache-manager";
 

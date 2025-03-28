@@ -1,10 +1,10 @@
 import { Body, Controller, HttpCode, Post } from "@nestjs/common";
-import { AuthService } from "@auth/auth.service";
-import { LoginDto } from "@auth/dto/login.dto";
-import { Access } from "@decorators/access.decorator";
-import { RegistrationDto } from "@auth/dto/registration.dto";
-import { LogoutDto } from "@auth/dto/logout.dto";
-import { RefreshTokenDto } from "@auth/dto/refresh.token.dto";
+import { AuthService } from "./auth.service";
+import { LoginDto } from "./dto/login.dto";
+import { Access } from "../common/decorators/access.decorator";
+import { RegistrationDto } from "./dto/registration.dto";
+import { LogoutDto } from "./dto/logout.dto";
+import { RefreshTokenDto } from "./dto/refresh.token.dto";
 import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
 //import { FirebaseService } from "src/firebase/firebase.service";
 

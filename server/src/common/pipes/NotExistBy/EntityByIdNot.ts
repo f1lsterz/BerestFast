@@ -1,6 +1,6 @@
 import { Injectable, PipeTransform } from "@nestjs/common";
-import { ApiError } from "@errors/apiError";
-import { PrismaService } from "src/prisma.service";
+import { ApiError } from "../../errors/apiError";
+import { PrismaService } from "../../../prisma.service";
 
 @Injectable()
 export class EntityByIdNotPipe implements PipeTransform {

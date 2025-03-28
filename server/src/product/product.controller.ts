@@ -9,7 +9,7 @@ import {
   Put,
   Query,
 } from "@nestjs/common";
-import { ProductService } from "@product/product.service";
+import { ProductService } from "./product.service";
 import {
   ApiBody,
   ApiOperation,
@@ -17,11 +17,11 @@ import {
   ApiQuery,
   ApiTags,
 } from "@nestjs/swagger";
-import { CreateProductDto } from "@product/dto/create.product.dto";
-import { UpdateProductDto } from "@product/dto/update.product.dto";
-import { Access } from "@common/decorators/access.decorator";
+import { CreateProductDto } from "./dto/create.product.dto";
+import { UpdateProductDto } from "./dto/update.product.dto";
+import { Access } from "../common/decorators/access.decorator";
 import { Role } from "@prisma/client";
-import { ProductParserService } from "src/ProductParserService";
+import { ProductParserService } from "../ProductParserService";
 
 @ApiTags("Products")
 @Controller("products")

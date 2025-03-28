@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
-import { ProductService } from "@product/product.service";
-import { ProductController } from "@product/product.controller";
-import { ProductParserService } from "src/ProductParserService";
+import { ProductService } from "./product.service";
+import { ProductController } from "./product.controller";
+import { ProductParserService } from "../ProductParserService";
 
 @Module({
   controllers: [ProductController],
