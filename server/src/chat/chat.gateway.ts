@@ -5,11 +5,11 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from "@nestjs/websockets";
-import { ChatService } from "@chat/chat.service";
+import { ChatService } from "./chat.service";
 import { Server, Socket } from "socket.io";
-import { SendMessageDto } from "@chat/dto/send.message.dto";
+import { SendMessageDto } from "./dto/send.message.dto";
 import { UploadedFile } from "@nestjs/common";
-import { AWSService } from "src/aws/aws.service";
+import { AWSService } from "../aws/aws.service";
 
 @WebSocketGateway()
 export class ChatGateway {

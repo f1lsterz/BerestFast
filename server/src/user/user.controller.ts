@@ -9,18 +9,18 @@ import {
   Patch,
   Post,
 } from "@nestjs/common";
-import { UserService } from "@user/user.service";
-import { CreateUserDto } from "@user/dto/create.user.dto";
-import { UpdateUserDto } from "@user/dto/update.user.dto";
-import { UserByIdNotPipe } from "@pipes/NotExistBy/UserByIdNot";
+import { UserService } from "./user.service";
+import { CreateUserDto } from "./dto/create.user.dto";
+import { UpdateUserDto } from "./dto/update.user.dto";
+import { UserByIdNotPipe } from "../common/pipes/NotExistBy/UserByIdNot";
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { User } from "@resTypes/user.response";
-import { Session } from "@resTypes/session.response";
-import { UpdateSessionDto } from "@user/dto/update.session.dto";
-import { SessionByIdNotPipe } from "@pipes/NotExistBy/SessionByIdNot";
-import { CreateSessionDto } from "@user/dto/create.session.dto";
-import { UniquePhoneNumberPipe } from "@pipes/ExistBy/UserByPhone";
-import { Access } from "@decorators/access.decorator";
+import { User } from "../common/types/user.response";
+import { Session } from "../common/types/session.response";
+import { UpdateSessionDto } from "./dto/update.session.dto";
+import { SessionByIdNotPipe } from "../common/pipes/NotExistBy/SessionByIdNot";
+import { CreateSessionDto } from "./dto/create.session.dto";
+import { UniquePhoneNumberPipe } from "../common/pipes/ExistBy/UserByPhone";
+import { Access } from "../common/decorators/access.decorator";
 import { Role } from "@prisma/client";
 
 @ApiTags("Users")

@@ -1,4 +1,4 @@
-import { CacheHasher } from "@cache/cache.hasher";
+import { CacheHasher } from "./cache.hasher";
 
 export class ProductCacheKeys {
   static async getProduct(id: number) {

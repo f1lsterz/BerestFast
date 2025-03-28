@@ -1,9 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { PrismaService } from "src/prisma.service";
-import { CreateUserDto } from "@user/dto/create.user.dto";
-import { UpdateUserDto } from "@user/dto/update.user.dto";
-import { CreateSessionDto } from "@user/dto/create.session.dto";
-import { UpdateSessionDto } from "@user/dto/update.session.dto";
+import { PrismaService } from "../prisma.service";
+import { CreateUserDto } from "./dto/create.user.dto";
+import { UpdateUserDto } from "./dto/update.user.dto";
+import { CreateSessionDto } from "./dto/create.session.dto";
+import { UpdateSessionDto } from "./dto/update.session.dto";
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import { Cache } from "cache-manager";
 import { Session, User } from "@prisma/client";

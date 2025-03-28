@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaService } from "src/prisma.service";
-import { SendMessageDto } from "@chat/dto/send.message.dto";
-import { CreateChatDto } from "@chat/dto/create.chat.dto";
-import { ApiError } from "@common/errors/apiError";
+import { PrismaService } from "../prisma.service";
+import { SendMessageDto } from "./dto/send.message.dto";
+import { CreateChatDto } from "./dto/create.chat.dto";
+import { ApiError } from "../common/errors/apiError";
 
 @Injectable()
 export class ChatService {

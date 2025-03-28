@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@auth/*": ["src/auth/*"],
+      "@chat/*": ["src/chat/*"],
+      "@common/*": ["src/common/*"],
+      "@cache/*": ["src/common/cache/*"],
+      "@decorators/*": ["src/common/decorators/*"],
+      "@errors/*": ["src/common/errors/*"],
+      "@filters/*": ["src/common/filters/*"],
+      "@guards/*": ["src/common/guards/*"],
+      "@pipes/*": ["src/common/pipes/*"],
+      "@strategies/*": ["src/common/strategies/*"],
+      "@resTypes/*": ["src/common/types/*"],
+      "@config/*": ["src/config/*"],
+      "@order/*": ["src/order/*"],
+      "@payment/*": ["src/payment/*"],
+      "@product/*": ["src/product/*"],
+      "@user/*": ["src/user/*"]
+    }
+  }
+}

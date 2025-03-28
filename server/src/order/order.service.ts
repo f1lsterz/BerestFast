@@ -1,8 +1,8 @@
-import { OrderCacheKeys } from "@common/cache/order.keys";
+import { OrderCacheKeys } from "../common/cache/order.keys";
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import { Cache } from "cache-manager";
 import { Inject, Injectable } from "@nestjs/common";
-import { PrismaService } from "src/prisma.service";
+import { PrismaService } from "../prisma.service";
 
 @Injectable()
 export class OrderService {

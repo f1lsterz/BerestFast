@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ConfigType } from "@nestjs/config";
-import config from "@config/config";
+import config from "../config/config";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 
 @Injectable()

@@ -4,7 +4,7 @@ import {
   HttpException,
   ExceptionFilter,
 } from "@nestjs/common";
-import { ApiError } from "@errors/apiError";
+import { ApiError } from "../errors/apiError";
 
 @Catch(ApiError)
 export class ApiErrorFilter implements ExceptionFilter {

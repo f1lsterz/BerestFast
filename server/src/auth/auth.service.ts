@@ -1,14 +1,14 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ConfigType } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
-import config from "@config/config";
-import { UserService } from "@user/user.service";
+import config from "../config/config";
+import { UserService } from "../user/user.service";
 import * as argon2 from "argon2";
-import { RegistrationDto } from "@auth/dto/registration.dto";
-import { LoginDto } from "@auth/dto/login.dto";
-import { ApiError } from "@errors/apiError";
+import { RegistrationDto } from "./dto/registration.dto";
+import { LoginDto } from "./dto/login.dto";
+import { ApiError } from "../common/errors/apiError";
 import { User } from "@prisma/client";
-import { PrismaService } from "src/prisma.service";
+import { PrismaService } from "../prisma.service";
 
 @Injectable()
 export class AuthService {

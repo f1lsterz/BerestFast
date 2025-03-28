@@ -5,7 +5,7 @@ import cors from "cors";
 import rateLimit from "express-rate-limit";
 
 export function setupMiddlewares(app: INestApplication) {
-  /* app.use(cors());
+  app.use(cors());
 
   app.use(helmet());
 
@@ -22,5 +22,5 @@ export function setupMiddlewares(app: INestApplication) {
       level: 6, // Оптимальний рівень стиснення
       threshold: 1024, // Стискати тільки якщо відповідь > 1KB
     })
-  ); */
+  );
 }

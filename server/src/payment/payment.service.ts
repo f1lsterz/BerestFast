@@ -1,9 +1,9 @@
-import { ApiError } from "@common/errors/apiError";
+import { ApiError } from "../common/errors/apiError";
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import { Cache } from "cache-manager";
 import { Inject, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { PrismaService } from "src/prisma.service";
+import { PrismaService } from "../prisma.service";
 import { v4 as uuidv4 } from "uuid";
 
 @Injectable()

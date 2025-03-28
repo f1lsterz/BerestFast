@@ -1,7 +1,7 @@
 import { Injectable, PipeTransform } from "@nestjs/common";
-import { PrismaService } from "src/prisma.service";
-import { ApiError } from "src/common/errors/apiError";
-import { CreateUserDto } from "src/user/dto/create.user.dto";
+import { PrismaService } from "../../../prisma.service";
+import { ApiError } from "../../../common/errors/apiError";
+import { CreateUserDto } from "../../../user/dto/create.user.dto";
 
 @Injectable()
 export class UniquePhoneNumberPipe implements PipeTransform {
