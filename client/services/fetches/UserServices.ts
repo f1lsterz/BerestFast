@@ -1,55 +1,59 @@
-import CustomFetchServices from "./CustomFetchServices";
+import CustomFetchService from "./CustomFetchServices";
 import { CreateSessionDto } from "DTOs/userDTOs/CreateSessionDto";
 import { CreateUserDto } from "DTOs/userDTOs/CreateUserDto";
 import { UpdateUserDto } from "DTOs/userDTOs/UpdateUserDto";
 import { UpdateSessionDto } from "DTOs/userDTOs/UpdateSessionDto";
-import { BASE_URL } from "./CustomFetchServices";
 
 class UserService {
-  private readonly basePath = "/users"; 
+  private readonly basePath = "/users";
+  private readonly api: CustomFetchService;
+
+  constructor() {
+    this.api = new CustomFetchService();
+  }
 
   async getUserById(userId: number) {
-    return CustomFetchServices.get(`${BASE_URL}${this.basePath}/${userId}`);
+    return this.api.get(`${this.basePath}/${userId}`);
   }
 
   async getUserByPhone(phoneNumber: string) {
-    return CustomFetchServices.get(`${BASE_URL}${this.basePath}/phone/${phoneNumber}`);
+    return this.api.get(`${this.basePath}/phone/${phoneNumber}`);
   }
 
   async getAllUsers() {
-    return CustomFetchServices.get(`${BASE_URL}${this.basePath}`);
+    return this.api.get(`${this.basePath}`);
   }
 
   async createUser(data: CreateUserDto) {
-    return CustomFetchServices.post(`${BASE_URL}${this.basePath}`, data);
+    return this.api.post(`${this.basePath}`, data);
   }
 
   async updateUser(userId: number, data: UpdateUserDto) {
-    return CustomFetchServices.put(`${BASE_URL}${this.basePath}/${userId}`, data);
+    return this.api.put(`${this.basePath}/${userId}`, data);
   }
 
   async deleteUser(userId: number) {
-    return CustomFetchServices.delete(`${BASE_URL}${this.basePath}/${userId}`);
+    return this.api.delete(`${this.basePath}/${userId}`);
   }
 
   async createUserSession(userId: number, data: CreateSessionDto) {
-    return CustomFetchServices.post(`${BASE_URL}${this.basePath}/${userId}/sessions`, data);
+    return this.api.post(`${this.basePath}/${userId}/sessions`, data);
   }
 
   async updateUserSession(sessionId: number, data: UpdateSessionDto) {
-    return CustomFetchServices.patch(`${BASE_URL}${this.basePath}/sessions/${sessionId}`, data);
+    return this.api.put(`${this.basePath}/sessions/${sessionId}`, data);
   }
 
   async getUserSessions(userId: number) {
-    return CustomFetchServices.get(`${BASE_URL}${this.basePath}/${userId}/sessions`);
+    return this.api.get(`${this.basePath}/${userId}/sessions`);
   }
 
   async deleteUserSessions(userId: number) {
-    return CustomFetchServices.delete(`${BASE_URL}${this.basePath}/${userId}/sessions`);
+    return this.api.delete(`${this.basePath}/${userId}/sessions`);
   }
 
   async deleteUserSession(sessionId: number) {
-    return CustomFetchServices.delete(`${BASE_URL}${this.basePath}/sessions/${sessionId}`);
+    return this.api.delete(`${this.basePath}/sessions/${sessionId}`);
   }
 }
 

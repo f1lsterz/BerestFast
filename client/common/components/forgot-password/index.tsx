@@ -1,13 +1,21 @@
 import React from "react";
-import { View } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import style from "./style";
+import MainContainer from "../main-container";
 
-const ForgotPasswordComponent = () => {
+const ForgotPasswordCode = () => {
   return (
-    <View>
+    <MainContainer>
       <></>
-    </View>
+    </MainContainer>
   );
 };
 
-export default ForgotPasswordComponent;
+export default ForgotPasswordCode;

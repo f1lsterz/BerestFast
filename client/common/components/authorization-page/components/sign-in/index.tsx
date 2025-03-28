@@ -17,27 +17,9 @@ const PhoneLoginScreen = () => {
   let status: string = "";
   status += params.status;
   const [phone, setPhone] = useState("");
-  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-  const phoneInputRef = useRef<TextInput>(null);
   const router = useRouter();
 
-  useEffect(() => {
-    requestAnimationFrame(() => {
-      phoneInputRef.current?.focus();
-    });
 
-    const keyboardShowListener = Keyboard.addListener("keyboardDidShow", () =>
-      setKeyboardVisible(true)
-    );
-    const keyboardHideListener = Keyboard.addListener("keyboardDidHide", () =>
-      setKeyboardVisible(false)
-    );
-
-    return () => {
-      keyboardShowListener.remove();
-      keyboardHideListener.remove();
-    };
-  }, []);
 
   const handleNext = () => {
     router.navigate(`/authorization/sign-in-password?status=${status}`);
@@ -57,7 +39,7 @@ const PhoneLoginScreen = () => {
         <View style={style.textInputContainer}>
           <PhoneIcon />
           <TextInput
-            ref={phoneInputRef}
+            autoFocus={true}
             style={style.textInput}
             placeholder="+380 XX XXX XX XX"
             placeholderTextColor="white"

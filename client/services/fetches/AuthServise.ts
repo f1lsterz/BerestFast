@@ -1,37 +1,33 @@
-import CustomFetchServices from "./CustomFetchServices";
+import CustomFetchService from "./CustomFetchServices";
 import { LoginDto } from "DTOs/loginDTOs/loginDto";
 import { LogoutDto } from "DTOs/loginDTOs/logoutDto";
 import { RegistrationDto } from "DTOs/loginDTOs/registrationDto";
 import { RefreshTokenDto } from "DTOs/loginDTOs/refreshTokenDto";
-import { BASE_URL } from "./CustomFetchServices";
 
 class AuthService {
   private readonly basePath = "/auth";
+  private readonly api: CustomFetchService;
+
+  constructor() {
+    this.api = new CustomFetchService();
+  }
 
   async register(data: RegistrationDto) {
-    return CustomFetchServices.post(
-      `${BASE_URL}${this.basePath}/registration`,
-      data
-    );
+    return this.api.post(`${this.basePath}/registration`, data);
   }
 
-  // Логін користувача
   async login(data: LoginDto) {
-    return CustomFetchServices.post(`${BASE_URL}${this.basePath}/login`, data);
+    return this.api.post(`${this.basePath}/login`, data);
   }
 
-  // Оновлення токену доступу
   async refreshToken(data: RefreshTokenDto) {
-    return CustomFetchServices.post(
-      `${BASE_URL}${this.basePath}/refresh`,
-      data
-    );
+    return this.api.post(`${this.basePath}/refresh`, data);
   }
 
-  // Вихід з системи
   async logout(data: LogoutDto) {
-    return CustomFetchServices.post(`${BASE_URL}${this.basePath}/logout`, data);
+    return this.api.post(`${this.basePath}/logout`, data);
   }
 }
 
-export default new AuthService();
+const authService = new AuthService();
+export default authService;

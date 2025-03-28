@@ -1,5 +1,5 @@
 import { StyleSheet, Dimensions } from "react-native";
-import { Colors } from "common/enum/colors";
+import { CustomColors } from "common/enum/colors";
 
 const { width, height } = Dimensions.get("window");
 
@@ -14,7 +14,7 @@ const style = StyleSheet.create({
   },
   textArticleStyle: {
     fontSize: 40,
-    color: Colors.White,
+    color: CustomColors.White,
   },
   textInputContainer: {
     display: "flex",
@@ -35,7 +35,7 @@ const style = StyleSheet.create({
     marginTop: 10,
     marginLeft: width * 0.03,
     fontSize: 20,
-    color: Colors.Yellow,
+    color: CustomColors.Yellow,
   },
   registerButton: {
     display: "flex",
@@ -47,23 +47,23 @@ const style = StyleSheet.create({
     alignSelf:"flex-start",
     marginLeft: width * 0.03,
     fontSize: 20,
-    color: Colors.Gray,
+    color: CustomColors.Gray,
   },
 
   textStyle: {
     fontSize: 15,
-    color: Colors.White,
+    color: CustomColors.White,
   },
   registrationTextStyle: {
     fontSize: 15,
-    color: Colors.Yellow,
+    color: CustomColors.Yellow,
   },
 
   agreeCodeButton: {
     justifyContent: "center",
     height: height * 0.07,
     alignItems: "center",
-    backgroundColor: Colors.White,
+    backgroundColor: CustomColors.White,
     width: width * 0.9,
     borderRadius: 40,
     marginTop: 0,

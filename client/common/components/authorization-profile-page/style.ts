@@ -1,11 +1,11 @@
 import { StyleSheet, Dimensions } from "react-native";
-import { Colors } from "common/enum/colors";
+import { CustomColors } from "common/enum/colors";
 
 const { width, height } = Dimensions.get("window");
 
 const style = StyleSheet.create({
   styleArticleText: {
-    color: Colors.White,
+    color: CustomColors.White,
     fontSize: 40,
   },
   textContainer: {
@@ -35,7 +35,7 @@ const style = StyleSheet.create({
     justifyContent: "center",
     height: height * 0.07,
     alignItems: "center",
-    backgroundColor: Colors.White,
+    backgroundColor: CustomColors.White,
     width: width * 0.9,
     borderRadius: 40,
     marginTop: height*0.15,

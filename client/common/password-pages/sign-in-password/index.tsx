@@ -10,31 +10,13 @@ import {
 import style from "./style";
 import LockIcon from "common/svg/lock-icon";
 import { useRouter } from "expo-router";
-import AuthServise from "services/fetches/AuthServise";
-import { RegistrationDto } from "DTOs/loginDTOs/registrationDto";
 
 const SingInAuthPassword = () => {
   const [password, setPassword] = useState("");
   const router = useRouter();
 
-  const [newUser, setNewUser] = useState<RegistrationDto>({
-    name: "John Doe",
-    password: "securepassword123",
-    phoneNumber: "+380990562418",
-    role: "USER",
-    deviceName: "iPhone 13 Pro",
-    os: "iOS 17.3",
-    appVersion: "1.2.5",
-    ipAddress: "192.168.1.1", 
-  });
-
-  const handleCreateUser = async () => {
-    try {
-      const response = await AuthServise.register(newUser);
-      console.log("User registered:", response);
-    } catch (error) {
-      console.error("Error registering user:", error);
-    }
+  const handleForgotPasswordPress = () => {
+    router.navigate(`authorization/forgot-password-page`);
   };
 
   return (
@@ -63,11 +45,16 @@ const SingInAuthPassword = () => {
             />
           </View>
           <TouchableOpacity>
-            <Text style={style.forgotTextStyle}>Забули пароль?</Text>
+            <Text
+              onPress={handleForgotPasswordPress}
+              style={style.forgotTextStyle}
+            >
+              Забули пароль?
+            </Text>
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity onPress={handleCreateUser} style={style.singInButton}>
+        <TouchableOpacity style={style.singInButton}>
           <Text>Увійти</Text>
         </TouchableOpacity>
       </View>
