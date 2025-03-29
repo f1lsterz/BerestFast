@@ -11,6 +11,7 @@ export default function Layout() {
       <Stack.Screen name="auth-user-profile-page/index" options={{ headerShown: false }} />
       <Stack.Screen name="forgot-password-code/index" options={{ headerShown: false }} />
       <Stack.Screen name="forgot-password-page/index" options={{ headerShown: false }} />
+      <Stack.Screen name="forgot-password-pass-page/index" options={{ headerShown: false }} />
       <Slot />
     </Stack>
   );
