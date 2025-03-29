@@ -1,9 +1,8 @@
-import AuthorizationPage from "common/components/authorization-page";
 import React from "react";
-import { View } from "react-native";
+import AuthorizationPageBuilder from "common/builders/authrization-page-builder";
 
 const SignUP = () => {
-  return <AuthorizationPage />;
+  return <AuthorizationPageBuilder />;
 };
 
 export default SignUP;

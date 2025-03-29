@@ -1,12 +1,12 @@
 import React from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import style from "./style";
-import AuthorizationPage from "common/components/authorization-page";
+import AuthorizationPageBuilder from "common/builders/authrization-page-builder";
 
 const SignIn = () => {
   return (
     <View style={style.container}>
-      <AuthorizationPage></AuthorizationPage>
+      <AuthorizationPageBuilder/>
     </View>
   );
 };
