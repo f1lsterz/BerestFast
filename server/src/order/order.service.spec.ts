@@ -21,7 +21,10 @@ describe("OrderService", () => {
           provide: PrismaService,
           useValue: prisma,
         },
-        { provide: CACHE_MANAGER, useValue: cacheManager },
+        {
+          provide: CACHE_MANAGER,
+          useValue: cacheManager,
+        },
       ],
     }).compile();
 

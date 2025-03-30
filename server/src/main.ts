@@ -1,7 +1,7 @@
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { ConfigService } from "@nestjs/config";
-import { ApiErrorFilter } from "./common/filters/validation.filter";
+import { AllExceptionsFilter } from "./common/filters/validation.filter";
 import { validationConfig } from "./config/validation.config";
 import { SwaggerModule } from "@nestjs/swagger";
 import { swaggerConfig } from "./config/swagger.config";
@@ -13,7 +13,7 @@ async function bootstrap() {
   const port = configService.get<number>("config.server.port") || 3000;
 
   app.useGlobalPipes(validationConfig);
-  app.useGlobalFilters(new ApiErrorFilter());
+  app.useGlobalFilters(new AllExceptionsFilter());
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup("api", app, document);

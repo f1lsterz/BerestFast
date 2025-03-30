@@ -11,7 +11,7 @@ import config from "../config/config";
 
 describe("AuthService", () => {
   let authService: AuthService;
-  let userService: UserService;
+  let userService: MockProxy<UserService>;
   let jwtService: MockProxy<JwtService>;
   let prisma: MockProxy<PrismaService>;
   let cacheManager: MockProxy<Cache>;
@@ -21,11 +21,15 @@ describe("AuthService", () => {
     prisma = mockDeep<PrismaService>();
     cacheManager = mockDeep<Cache>();
     jwtService = mockDeep<JwtService>();
+    userService = mockDeep<UserService>();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        UserService,
         AuthService,
+        {
+          provide: UserService,
+          useValue: userService,
+        },
         {
           provide: PrismaService,
           useValue: prisma,
@@ -44,13 +48,12 @@ describe("AuthService", () => {
         },
         {
           provide: config.KEY,
-          useValue: { jwt: { secret: "test-secret", expiresIn: "1h" } }, // Мокані значення
+          useValue: { jwt: { secret: "test-secret", expiresIn: "1h" } },
         },
       ],
     }).compile();
 
     authService = module.get<AuthService>(AuthService);
-    userService = module.get<UserService>(UserService);
   });
 
   it("should be defined", () => {

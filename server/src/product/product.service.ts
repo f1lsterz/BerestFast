@@ -22,7 +22,7 @@ export class ProductService {
     return newProduct;
   }
 
-  async updateProduct(productId, updateProductDto: UpdateProductDto) {
+  async updateProduct(productId: number, updateProductDto: UpdateProductDto) {
     const updatedProduct = await this.prisma.product.update({
       where: { id: productId },
       data: updateProductDto,

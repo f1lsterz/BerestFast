@@ -33,5 +33,5 @@ export class UpdateUserDto {
     description: "URL фотографії користувача (необов'язково для оновлення)",
   })
   @IsString()
-  photoUrl?: string;
+  photoUrl?: string | null;
 }

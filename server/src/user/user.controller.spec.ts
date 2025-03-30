@@ -6,7 +6,7 @@ import { PrismaService } from "src/prisma.service";
 
 describe("UserController", () => {
   let controller: UserController;
-  let userService: UserService;
+  let userService: MockProxy<UserService>;
   let prisma: MockProxy<PrismaService>;
 
   beforeEach(async () => {

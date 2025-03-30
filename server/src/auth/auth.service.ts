@@ -9,6 +9,8 @@ import { LoginDto } from "./dto/login.dto";
 import { ApiError } from "../common/errors/apiError";
 import { User } from "@prisma/client";
 import { PrismaService } from "../prisma.service";
+import { FirebaseService } from "../firebase/firebase.service";
+import { ResetPasswordDto } from "./dto/reset.password.dto";
 
 @Injectable()
 export class AuthService {
@@ -16,7 +18,8 @@ export class AuthService {
     @Inject(config.KEY) private configService: ConfigType<typeof config>,
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
-    private readonly prisma: PrismaService
+    private readonly prisma: PrismaService,
+    private readonly firebaseService: FirebaseService
   ) {}
 
   async login(loginDto: LoginDto) {
@@ -70,7 +73,16 @@ export class AuthService {
       os,
       appVersion,
       ipAddress,
+      phoneVerificationToken,
     } = registrationDto;
+
+    const verifiedPhoneNumber = await this.firebaseService.verifyPhoneToken(
+      phoneVerificationToken
+    );
+
+    if (verifiedPhoneNumber !== phoneNumber) {
+      throw ApiError.BadRequest("Phone number verification failed");
+    }
 
     const hashedPassword = await argon2.hash(password);
     const user = await this.userService.createUser({
@@ -152,5 +164,27 @@ export class AuthService {
     });
 
     return tokens;
+  }
+
+  async resetPassword(resetPasswordDto: ResetPasswordDto) {
+    const { phoneNumber, newPassword, phoneVerificationToken } =
+      resetPasswordDto;
+    const verifiedPhoneNumber = await this.firebaseService.verifyPhoneToken(
+      phoneVerificationToken
+    );
+
+    if (verifiedPhoneNumber !== phoneNumber) {
+      throw ApiError.BadRequest("Phone number verification failed");
+    }
+
+    const hashedPassword = await argon2.hash(newPassword);
+    const user = await this.userService.getUserByPhone(phoneNumber);
+
+    if (!user) {
+      throw ApiError.NotFound("User not found");
+    }
+
+    user.password = hashedPassword;
+    await this.userService.updateUser(user.id, user);
   }
 }

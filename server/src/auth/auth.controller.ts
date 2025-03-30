@@ -6,15 +6,11 @@ import { RegistrationDto } from "./dto/registration.dto";
 import { LogoutDto } from "./dto/logout.dto";
 import { RefreshTokenDto } from "./dto/refresh.token.dto";
 import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
-//import { FirebaseService } from "src/firebase/firebase.service";
 
 @ApiTags("Authentication")
 @Controller("auth")
 export class AuthController {
-  constructor(
-    private readonly authService: AuthService
-    //private readonly firebaseService: FirebaseService
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Post("registration")
   @HttpCode(201)

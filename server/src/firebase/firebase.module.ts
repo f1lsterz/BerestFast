@@ -1,4 +1,4 @@
-/* import { Module } from "@nestjs/common";
+import { Module } from "@nestjs/common";
 import { FirebaseService } from "./firebase.service";
 
 @Module({
@@ -6,4 +6,3 @@ import { FirebaseService } from "./firebase.service";
   exports: [FirebaseService],
 })
 export class FirebaseModule {}
- */
