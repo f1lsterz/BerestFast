@@ -3,6 +3,7 @@ import { AuthService } from "./auth.service";
 import { LoginDto } from "./dto/login.dto";
 import { Access } from "../common/decorators/access.decorator";
 import { RegistrationDto } from "./dto/registration.dto";
+import { ResetPasswordDto } from "./dto/reset.password.dto";
 import { LogoutDto } from "./dto/logout.dto";
 import { RefreshTokenDto } from "./dto/refresh.token.dto";
 import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
@@ -56,16 +57,13 @@ export class AuthController {
     );
   }
 
-  /*   @Post("send-otp")
-  async sendOTP(@Body("phoneNumber") phoneNumber: string) {
-    return await this.firebaseService.sendOTP(phoneNumber);
+  @Post("reset-password")
+  @HttpCode(200)
+  @ApiOperation({ summary: "Reset user password" })
+  @ApiResponse({ status: 200, description: "Password successfully reset" })
+  @ApiResponse({ status: 400, description: "Phone number verification failed" })
+  @ApiResponse({ status: 404, description: "User not found" })
+  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+    return await this.authService.resetPassword(resetPasswordDto);
   }
-
-  @Post("verify-otp")
-  async verifyOTP(
-    @Body("session") session: string,
-    @Body("otpCode") otpCode: string
-  ) {
-    return await this.firebaseService.verifyOTP(session, otpCode);
-  } */
 }
