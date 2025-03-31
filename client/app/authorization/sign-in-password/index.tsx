@@ -1,13 +1,8 @@
+import AuthorizationPasswordPageBuilder from "common/builders/authorization-password-page-builder";
 import React from "react";
-import MainContainer from "common/components/main-container";
-import SingInAuthPassword from "common/password-pages/sign-in-password";
 
 const SignInPassword = () => {
-  return (
-    <MainContainer>
-      <SingInAuthPassword />
-    </MainContainer>
-  );
+  return <AuthorizationPasswordPageBuilder />;
 };
 
 export default SignInPassword;

@@ -1,13 +1,8 @@
 import React from "react";
-import MainContainer from "common/components/main-container";
-import SingUpAuthPassword from "common/password-pages/sign-up-password/sign-up-password";
+import AuthorizationPasswordPageBuilder from "common/builders/authorization-password-page-builder";
 
 const SignUpPassword = () => {
-  return (
-    <MainContainer>
-      <SingUpAuthPassword/>
-    </MainContainer>
-  );
+  return <AuthorizationPasswordPageBuilder />;
 };
 
 export default SignUpPassword;
