@@ -9,6 +9,8 @@ import PasswordInput from "common/components/password-text-input";
 import ForgotPasswordButton from "common/components/forgot-password-button";
 import ContinueButton from "common/components/continue-button";
 
+import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
+
 const AuthorizationPasswordPageBuilder = () => {
   const params = useLocalSearchParams();
   let status: string = "";
@@ -23,6 +25,19 @@ const AuthorizationPasswordPageBuilder = () => {
       //router.navigate(`/authorization/code-page?status=${status}`);
     } else {
       throw new Error();
+    }
+  };
+
+  const [confirm, setConfirm] = useState<FirebaseAuthTypes.ConfirmationResult | null>(null);
+  const [message, setMessage] = useState("");
+
+  const sendVerificationCode = async () => {
+    try {
+      const confirmation = await auth().signInWithPhoneNumber("+380990362418");
+      setConfirm(confirmation);
+      setMessage("Код відправлено!");
+    } catch (error) {
+      setMessage("Помилка відправки коду: " + error);
     }
   };
 
