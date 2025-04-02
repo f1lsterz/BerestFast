@@ -7,6 +7,8 @@ import SingUpTextArticle from "./component/sign-up-text-artcle";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import PhoneInputField from "common/components/phone-text-input";
 import ContinueButton from "common/components/continue-button";
+import { validatePhoneNumber } from "common/components/phone-validator";
+import { RegistrationStorage } from "services/storage/registration-storage";
 
 const AuthorizationPageBuilder = () => {
   const params = useLocalSearchParams();
@@ -15,13 +17,17 @@ const AuthorizationPageBuilder = () => {
   const [phone, setPhone] = useState("+380");
   const router = useRouter();
 
+  const { setPhoneNumber , phoneNumber } = RegistrationStorage();
+
   const handleOnPress = () => {
-    if (status === "sign-in") {
+    const isValidUA = validatePhoneNumber(phone, "UA");
+
+    if (status === "sign-in" && isValidUA) {
       router.navigate(`authorization/code-page?status=${status}`);
-    } else if (status === "sing-up") {
+      setPhoneNumber(phone);
+    } else if (status === "sing-up" && isValidUA) {
       router.navigate(`/authorization/code-page?status=${status}`);
-    }else{
-        throw new Error();
+      setPhoneNumber(phone);
     }
   };
 

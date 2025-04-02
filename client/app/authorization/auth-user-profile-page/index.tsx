@@ -1,8 +1,8 @@
 import React from "react";
-import AuthProfileRegPage from "common/components/authorization-profile-page";
+import AuthorizationProfilePageBuilder from "common/builders/authorization-profile-page-builder";
 
 const AuthUserProfile = () => {
-  return <AuthProfileRegPage/>;
+  return <AuthorizationProfilePageBuilder/>;
 };
 
 export default AuthUserProfile;

@@ -23,22 +23,12 @@ const style = StyleSheet.create({
     marginTop: height * 0.04,
     alignItems: "center",
   },
-
   textInput: {
     width: width * 0.77,
     height: height * 0.06,
     marginLeft: 5,
     fontSize: 20,
     color: "white",
-  },
-  agreeCodeButton: {
-    justifyContent: "center",
-    height: height * 0.07,
-    alignItems: "center",
-    backgroundColor: CustomColors.White,
-    width: width * 0.9,
-    borderRadius: 40,
-    marginTop: height*0.15,
   },
 });
 

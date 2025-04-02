@@ -8,38 +8,26 @@ import SignUpText from "./components/signUpText";
 import PasswordInput from "common/components/password-text-input";
 import ForgotPasswordButton from "common/components/forgot-password-button";
 import ContinueButton from "common/components/continue-button";
-
-import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
+import { RegistrationStorage } from "services/storage/registration-storage";
 
 const AuthorizationPasswordPageBuilder = () => {
   const params = useLocalSearchParams();
   let status: string = "";
   status += params.status;
   const router = useRouter();
-  const [password, setPassword] = useState("");
+  const [passwordReg, setPasswordReg] = useState("");
+
+  const { setPassword , password , phoneNumber} = RegistrationStorage();
 
   const handleOnPress = () => {
     if (status === "sign-in") {
       //router.navigate(`authorization/code-page?status=${status}`);
     } else if (status === "sing-up") {
-      //router.navigate(`/authorization/code-page?status=${status}`);
-    } else {
-      throw new Error();
+      setPassword(passwordReg);
+      router.navigate(`/authorization/auth-user-profile-page`);
     }
   };
 
-  const [confirm, setConfirm] = useState<FirebaseAuthTypes.ConfirmationResult | null>(null);
-  const [message, setMessage] = useState("");
-
-  const sendVerificationCode = async () => {
-    try {
-      const confirmation = await auth().signInWithPhoneNumber("+380990362418");
-      setConfirm(confirmation);
-      setMessage("Код відправлено!");
-    } catch (error) {
-      setMessage("Помилка відправки коду: " + error);
-    }
-  };
 
   return (
     <MainContainer>
@@ -52,8 +40,8 @@ const AuthorizationPasswordPageBuilder = () => {
         <View>
           <PasswordInput
             placeholder="Введіть пароль"
-            password={password}
-            setPassword={setPassword}
+            password={passwordReg}
+            setPassword={setPasswordReg}
           />
           {status == "sign-in" && <ForgotPasswordButton />}
         </View>
