@@ -7,11 +7,16 @@ import { ResetPasswordDto } from "./dto/reset.password.dto";
 import { LogoutDto } from "./dto/logout.dto";
 import { RefreshTokenDto } from "./dto/refresh.token.dto";
 import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { SendCodeDto } from "./dto/send.code.dto";
+import { TwilioService } from "../twilio/twilio.service";
 
 @ApiTags("Authentication")
 @Controller("auth")
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly twilioService: TwilioService
+  ) {}
 
   @Post("registration")
   @HttpCode(201)
@@ -65,5 +70,15 @@ export class AuthController {
   @ApiResponse({ status: 404, description: "User not found" })
   async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
     return await this.authService.resetPassword(resetPasswordDto);
+  }
+
+  @Post("send-code")
+  @HttpCode(200)
+  @ApiOperation({ summary: "Send verification code to phone number" })
+  @ApiResponse({ status: 200, description: "Verification code sent" })
+  @ApiResponse({ status: 400, description: "Invalid phone number" })
+  async sendCode(@Body() sendCodeDto: SendCodeDto) {
+    await this.twilioService.sendVerificationCode(sendCodeDto.phoneNumber);
+    return { message: "Verification code sent successfully" };
   }
 }

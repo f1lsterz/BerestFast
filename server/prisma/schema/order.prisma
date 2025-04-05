@@ -58,7 +58,6 @@ model Order_Review {
 enum Order_Status {
     PENDING
     ACCEPTED
-    REJECTED
     DELIVERED
     CANCELLED
 }

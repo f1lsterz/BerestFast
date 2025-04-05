@@ -1,8 +1,8 @@
-import { OrderCacheKeys } from "../common/cache/order.keys";
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import { Cache } from "cache-manager";
 import { Inject, Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
+import { Order, Order_Items, Order_Review } from "@prisma/client";
 
 @Injectable()
 export class OrderService {
@@ -11,7 +11,11 @@ export class OrderService {
     private readonly prisma: PrismaService
   ) {}
 
-  async createOrder(userId: number, courierId: number, orderItems) {
+  async createOrder(
+    userId: number,
+    courierId: number,
+    orderItems
+  ): Promise<Order> {
     const order = this.prisma.order.create({
       data: {
         userId,
@@ -19,51 +23,61 @@ export class OrderService {
       },
     });
 
-    await this.cacheManager.del(await OrderCacheKeys.getAllOrders());
+    await this.cacheManager.del(CACHE_ORDERS.ALL_ORDERS);
+    await this.cacheManager.del(CACHE_ORDERS.USER_ORDERS(userId));
+
     return order;
   }
 
-  async getOrderById(orderId: number) {
-    const cacheKey = await OrderCacheKeys.getOrder(orderId);
-    const cachedOrder = await this.cacheManager.get(cacheKey);
+  async getOrderById(orderId: number): Promise<Order | null> {
+    const cacheKey = CACHE_ORDERS.ORDER(orderId);
+    const cachedOrder = await this.cacheManager.get<Order>(cacheKey);
 
     if (cachedOrder) return cachedOrder;
 
     const order = await this.prisma.order.findUnique({
       where: { id: orderId },
     });
-    await this.cacheManager.set(cacheKey, order, 3600);
+    if (order) {
+      await this.cacheManager.set(cacheKey, order, 3600);
+    }
+    return order;
   }
 
-  async cancelOrder(orderId: number) {
-    const cacheKey = await OrderCacheKeys.getOrder(orderId);
+  async updateOrderStatus(orderId: number, newStatus: string): Promise<Order> {
+    const cacheKey = CACHE_ORDERS.ORDER(orderId);
+
+    const data: any = { status: newStatus };
+
+    if (newStatus === "CANCELLED") {
+      data.completedAt = new Date();
+    }
+
     const updatedOrder = await this.prisma.order.update({
       where: { id: orderId },
-      data: {
-        status: "CANCELLED",
-        completedAt: new Date(),
-      },
+      data,
     });
 
     await this.cacheManager.del(cacheKey);
+    await this.cacheManager.del(CACHE_ORDERS.ALL_ORDERS);
+    await this.cacheManager.del(CACHE_ORDERS.USER_ORDERS(updatedOrder.userId));
+
     return updatedOrder;
   }
 
-  async acceptOrder(orderId: number) {
-    return this.prisma.order.update({
-      where: { id: orderId },
-      data: {
-        status: "ACCEPTED",
-      },
-    });
-  }
+  async getUserOrders(userId: number): Promise<Order[]> {
+    const cacheKey = CACHE_ORDERS.USER_ORDERS(userId);
+    const cachedOrders = await this.cacheManager.get<Order[]>(cacheKey);
 
-  async updateOrderStatus() {}
+    if (cachedOrders) return cachedOrders;
 
-  async getUserOrders(userId: number) {
-    return this.prisma.order.findMany({
+    const orders = await this.prisma.order.findMany({
       where: { userId: userId },
     });
+
+    await this.cacheManager.set(cacheKey, orders, 3600);
+
+    return orders;
   }
 
   async addOrderReview(
@@ -71,8 +85,8 @@ export class OrderService {
     userId: number,
     rating: number,
     comment?: string
-  ) {
-    return this.prisma.order_Review.create({
+  ): Promise<Order_Review> {
+    const review = await this.prisma.order_Review.create({
       data: {
         orderId,
         userId,
@@ -80,50 +94,92 @@ export class OrderService {
         comment,
       },
     });
+
+    await this.cacheManager.del(CACHE_ORDERS.ORDER(orderId));
+
+    return review;
   }
 
-  async getAllOrders() {}
+  async getAllOrders(): Promise<Order[]> {
+    const cacheKey = CACHE_ORDERS.ALL_ORDERS;
+    const cachedOrders = await this.cacheManager.get<Order[]>(cacheKey);
 
-  async forceCancelOrder(orderId: number) {
-    return this.prisma.order.update({
+    if (cachedOrders) return cachedOrders;
+
+    const orders = await this.prisma.order.findMany();
+
+    await this.cacheManager.set(cacheKey, orders, 86400);
+
+    return orders;
+  }
+
+  async assignCourier(orderId: number, courierId: number): Promise<Order> {
+    const cacheKey = CACHE_ORDERS.ORDER(orderId);
+
+    const updatedOrder = await this.prisma.order.update({
       where: { id: orderId },
-      data: {
-        status: "CANCELLED",
-        completedAt: new Date(),
-      },
+      data: { courierId },
     });
+
+    await this.cacheManager.del(cacheKey);
+
+    return updatedOrder;
   }
 
-  async assignCourier() {}
-
-  async addOrderItem(orderId: number, productId: number, quantity) {
-    return this.prisma.order_Items.create({
+  async addOrderItem(
+    orderId: number,
+    productId: number,
+    quantity: number
+  ): Promise<Order_Items> {
+    const orderItem = await this.prisma.order_Items.create({
       data: {
         orderId,
         productId,
         quantity,
       },
     });
+
+    await this.cacheManager.del(CACHE_ORDERS.ORDER(orderId));
+
+    return orderItem;
   }
 
-  async updateOrderItem(orderItemId: number, quantity: number) {
-    return this.prisma.order_Items.update({
+  async updateOrderItem(
+    orderItemId: number,
+    quantity: number
+  ): Promise<Order_Items> {
+    const orderItem = await this.prisma.order_Items.update({
       where: { id: orderItemId },
       data: { quantity },
     });
+
+    await this.cacheManager.del(CACHE_ORDERS.ORDER(orderItem.orderId));
+
+    return orderItem;
   }
 
-  async removeOrderItem(orderItemId: number) {
-    return this.prisma.order_Items.delete({
-      where: {
-        id: orderItemId,
-      },
+  async removeOrderItem(orderItemId: number): Promise<Order_Items> {
+    const orderItem = await this.prisma.order_Items.delete({
+      where: { id: orderItemId },
     });
+
+    await this.cacheManager.del(CACHE_ORDERS.ORDER(orderItem.orderId));
+
+    return orderItem;
   }
 
-  async getOrderReviews(orderId: number) {
-    return this.prisma.order_Review.findMany({
+  async getOrderReviews(orderId: number): Promise<Order_Review[]> {
+    const cacheKey = CACHE_ORDERS.ORDER_REVIEWS(orderId);
+    const cachedReviews = await this.cacheManager.get<Order_Review[]>(cacheKey);
+
+    if (cachedReviews) return cachedReviews;
+
+    const reviews = await this.prisma.order_Review.findMany({
       where: { orderId },
     });
+
+    await this.cacheManager.set(cacheKey, reviews, 600);
+
+    return reviews;
   }
 }

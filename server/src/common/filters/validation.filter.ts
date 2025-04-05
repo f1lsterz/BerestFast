@@ -45,17 +45,17 @@ export class AllExceptionsFilter implements ExceptionFilter {
       errorType = "UnknownError";
     }
 
-    /* this.logger.error(
+    this.logger.error(
       `[${errorType}] ${status} - ${message} - ${request.method} ${request.url}`,
       exception instanceof Error ? exception.stack : ""
-    ); */
+    );
 
-    this.logger.error(
+    /* this.logger.error(
       `[${errorType}] ${status} - ${message} - ${request.method} ${request.url}`,
       exception instanceof Error
         ? "Stack trace hidden for security reasons."
         : ""
-    );
+    ); */
 
     response.status(status).json({
       statusCode: status,

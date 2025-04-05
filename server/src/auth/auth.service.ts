@@ -9,8 +9,8 @@ import { LoginDto } from "./dto/login.dto";
 import { ApiError } from "../common/errors/apiError";
 import { User } from "@prisma/client";
 import { PrismaService } from "../prisma.service";
-import { FirebaseService } from "../firebase/firebase.service";
 import { ResetPasswordDto } from "./dto/reset.password.dto";
+import { TwilioService } from "../twilio/twilio.service";
 
 @Injectable()
 export class AuthService {
@@ -19,7 +19,7 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
     private readonly prisma: PrismaService,
-    private readonly firebaseService: FirebaseService
+    private readonly twilioService: TwilioService
   ) {}
 
   async login(loginDto: LoginDto) {
@@ -76,11 +76,12 @@ export class AuthService {
       phoneVerificationToken,
     } = registrationDto;
 
-    const verifiedPhoneNumber = await this.firebaseService.verifyPhoneToken(
+    const isVerified = await this.twilioService.checkVerificationCode(
+      phoneNumber,
       phoneVerificationToken
     );
 
-    if (verifiedPhoneNumber !== phoneNumber) {
+    if (!isVerified) {
       throw ApiError.BadRequest("Phone number verification failed");
     }
 
@@ -169,11 +170,12 @@ export class AuthService {
   async resetPassword(resetPasswordDto: ResetPasswordDto) {
     const { phoneNumber, newPassword, phoneVerificationToken } =
       resetPasswordDto;
-    const verifiedPhoneNumber = await this.firebaseService.verifyPhoneToken(
+    const isVerified = await this.twilioService.checkVerificationCode(
+      phoneNumber,
       phoneVerificationToken
     );
 
-    if (verifiedPhoneNumber !== phoneNumber) {
+    if (!isVerified) {
       throw ApiError.BadRequest("Phone number verification failed");
     }
 

@@ -5,13 +5,13 @@ import { UserModule } from "../user/user.module";
 import { JwtModule } from "@nestjs/jwt";
 import config from "../config/config";
 import { JwtStrategy } from "../common/strategies/jwt.strategy";
-import { FirebaseModule } from "src/firebase/firebase.module";
+import { TwilioModule } from "../twilio/twilio.module";
 
 @Module({
   imports: [
     JwtModule.registerAsync(config.asProvider()),
     UserModule,
-    FirebaseModule,
+    TwilioModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],

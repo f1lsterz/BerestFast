@@ -16,17 +16,19 @@ export class UserService {
   ) {}
 
   async getUserById(id: number) {
-    const cachedUser = await this.cacheManager.get(`user:${id}`);
+    const cacheKey = CACHE_USERS.USER(id);
+    const cachedUser = await this.cacheManager.get(cacheKey);
     if (cachedUser) {
       return cachedUser;
     }
 
     const user = await this.prisma.user.findUnique({ where: { id } });
-    await this.cacheManager.set(`user:${id}`, user, 0);
+    await this.cacheManager.set(cacheKey, user, 0);
     return user;
   }
 
   async getUserByPhone(phoneNumber: string) {
+    const cacheKey = CACHE_USERS.USER_BY_PHONE(phoneNumber);
     const cachedUser = await this.cacheManager.get<User | null>(
       `user:${phoneNumber}`
     );
@@ -36,26 +38,27 @@ export class UserService {
     }
 
     const user = await this.prisma.user.findUnique({ where: { phoneNumber } });
-    await this.cacheManager.set(`user:${phoneNumber}`, user, 3600);
+    await this.cacheManager.set(cacheKey, user, 3600);
     return user;
   }
 
   async getAllUsers() {
-    const cachedUsers = await this.cacheManager.get("users");
+    const cacheKey = CACHE_USERS.ALL_USERS;
+    const cachedUsers = await this.cacheManager.get(cacheKey);
 
     if (cachedUsers) {
       return cachedUsers;
     }
 
     const users = await this.prisma.user.findMany();
-    await this.cacheManager.set("users", users, 0);
+    await this.cacheManager.set(cacheKey, users, 0);
     return users;
   }
 
   async createUser(createUserDto: CreateUserDto) {
     const newUser = await this.prisma.user.create({ data: createUserDto });
 
-    await this.cacheManager.del("users");
+    await this.cacheManager.del(CACHE_USERS.ALL_USERS);
 
     return newUser;
   }
@@ -66,8 +69,8 @@ export class UserService {
       data: updateUserDto,
     });
 
-    await this.cacheManager.del(`user:${userId}`);
-    await this.cacheManager.del("users");
+    await this.cacheManager.del(CACHE_USERS.USER(userId));
+    await this.cacheManager.del(CACHE_USERS.ALL_USERS);
 
     return updatedUser;
   }
@@ -77,8 +80,8 @@ export class UserService {
       where: { id: userId },
     });
 
-    await this.cacheManager.del(`user:${userId}`);
-    await this.cacheManager.del("users");
+    await this.cacheManager.del(CACHE_USERS.USER(userId));
+    await this.cacheManager.del(CACHE_USERS.ALL_USERS);
 
     return deletedUser;
   }
@@ -106,7 +109,7 @@ export class UserService {
       },
     });
 
-    await this.cacheManager.del(`user:${userId}:sessions`);
+    await this.cacheManager.del(CACHE_USERS.USER_SESSIONS(userId));
 
     return newSession;
   }
@@ -126,16 +129,17 @@ export class UserService {
       },
     });
 
-    await this.cacheManager.del(`session:${sessionId}`);
-    await this.cacheManager.del(`user:${updatedSession.userId}:sessions`);
+    await this.cacheManager.del(CACHE_USERS.SESSION(sessionId));
+    await this.cacheManager.del(
+      CACHE_USERS.USER_SESSIONS(updatedSession.userId)
+    );
 
     return updatedSession;
   }
 
   async getUserSession(sessionId: number) {
-    const cachedSession = await this.cacheManager.get<Session | null>(
-      `session:${sessionId}`
-    );
+    const cacheKey = CACHE_USERS.SESSION(sessionId);
+    const cachedSession = await this.cacheManager.get<Session | null>(cacheKey);
 
     if (cachedSession) {
       return cachedSession;
@@ -145,22 +149,21 @@ export class UserService {
       where: { id: sessionId },
     });
 
-    await this.cacheManager.set(`session:${sessionId}`, session, 3600);
+    await this.cacheManager.set(cacheKey, session, 3600);
 
     return session;
   }
 
   async getUserSessions(userId: number) {
-    const cachedSessions = await this.cacheManager.get(
-      `user:${userId}:sessions`
-    );
+    const cacheKey = CACHE_USERS.USER_SESSIONS(userId);
+    const cachedSessions = await this.cacheManager.get(cacheKey);
 
     if (cachedSessions) {
       return cachedSessions;
     }
 
     const sessions = await this.prisma.session.findMany({ where: { userId } });
-    await this.cacheManager.set(`user:${userId}:sessions`, sessions, 0);
+    await this.cacheManager.set(cacheKey, sessions, 0);
 
     return sessions;
   }
@@ -170,7 +173,7 @@ export class UserService {
       where: { userId },
     });
 
-    await this.cacheManager.del(`user:${userId}:sessions`);
+    await this.cacheManager.del(CACHE_USERS.USER_SESSIONS(userId));
 
     return deletedSessions;
   }
@@ -180,7 +183,7 @@ export class UserService {
       where: { id: sessionId },
     });
 
-    await this.cacheManager.del(`session:${sessionId}`);
+    await this.cacheManager.del(CACHE_USERS.SESSION(sessionId));
 
     return deletedSession;
   }

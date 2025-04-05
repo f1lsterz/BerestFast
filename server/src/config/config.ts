@@ -19,8 +19,9 @@ export default registerAs("config", () => ({
     chatPort: process.env.SOCKET_CHAT_PORT || 3001,
   },
   redis: {
-    host: /* process.env.REDIS_HOST || */ "localhost",
-    port: /* process.env.REDIS_PORT  ||*/ 6379,
+    host: process.env.REDIS_HOST || "localhost",
+    port: process.env.REDIS_PORT || 6379,
+    cachePrefix: process.env.CACHE_PREFIX || "dely-cache",
   },
   aws: {
     region: process.env.AWS_REGION || "us-east-1",
@@ -32,9 +33,9 @@ export default registerAs("config", () => ({
       chatImagesFolder: "chats/",
     },
   },
-  firebase: {
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-    privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
+  twilio: {
+    accountSid: process.env.TWILIO_ACCOUNT_SID,
+    authToken: process.env.TWILIO_AUTH_TOKEN,
+    verificationSid: process.env.TWILIO_VERIFICATION_SERVICE_SID,
   },
 }));
