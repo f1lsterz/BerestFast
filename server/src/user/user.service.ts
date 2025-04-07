@@ -7,6 +7,8 @@ import { UpdateSessionDto } from "./dto/update.session.dto";
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import { Cache } from "cache-manager";
 import { Session, User } from "@prisma/client";
+import { ApiError } from "../common/errors/apiError";
+import { CACHE_USERS } from "../common/cache/cache.keys";
 
 @Injectable()
 export class UserService {
@@ -38,6 +40,11 @@ export class UserService {
     }
 
     const user = await this.prisma.user.findUnique({ where: { phoneNumber } });
+
+    if (!user) {
+      throw ApiError.NotFound("User not found");
+    }
+
     await this.cacheManager.set(cacheKey, user, 3600);
     return user;
   }

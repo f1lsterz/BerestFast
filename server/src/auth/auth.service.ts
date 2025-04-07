@@ -10,7 +10,8 @@ import { ApiError } from "../common/errors/apiError";
 import { User } from "@prisma/client";
 import { PrismaService } from "../prisma.service";
 import { ResetPasswordDto } from "./dto/reset.password.dto";
-import { TwilioService } from "../twilio/twilio.service";
+import { UserWithTokens } from "./types/user.with.tokens";
+import { AuthTokens } from "./types/auth.tokens";
 
 @Injectable()
 export class AuthService {
@@ -18,11 +19,10 @@ export class AuthService {
     @Inject(config.KEY) private configService: ConfigType<typeof config>,
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
-    private readonly prisma: PrismaService,
-    private readonly twilioService: TwilioService
+    private readonly prisma: PrismaService
   ) {}
 
-  async login(loginDto: LoginDto) {
+  async login(loginDto: LoginDto): Promise<UserWithTokens> {
     const { phoneNumber, password, deviceName, os, appVersion, ipAddress } =
       loginDto;
 
@@ -60,10 +60,12 @@ export class AuthService {
       });
     }
 
-    return { user, ...tokens };
+    return { user, tokens };
   }
 
-  async registration(registrationDto: RegistrationDto) {
+  async registration(
+    registrationDto: RegistrationDto
+  ): Promise<UserWithTokens> {
     const {
       name,
       password,
@@ -73,17 +75,7 @@ export class AuthService {
       os,
       appVersion,
       ipAddress,
-      phoneVerificationToken,
     } = registrationDto;
-
-    const isVerified = await this.twilioService.checkVerificationCode(
-      phoneNumber,
-      phoneVerificationToken
-    );
-
-    if (!isVerified) {
-      throw ApiError.BadRequest("Phone number verification failed");
-    }
 
     const hashedPassword = await argon2.hash(password);
     const user = await this.userService.createUser({
@@ -105,14 +97,17 @@ export class AuthService {
       },
     });
 
-    return { user, ...tokens };
+    return { user, tokens };
   }
 
-  private async validatePassword(password: string, hashedPassword: string) {
+  private async validatePassword(
+    password: string,
+    hashedPassword: string
+  ): Promise<boolean> {
     return await argon2.verify(hashedPassword, password);
   }
 
-  async logout(refreshToken: string, allDevices: boolean) {
+  async logout(refreshToken: string, allDevices: boolean): Promise<void> {
     if (allDevices) {
       const session = await this.prisma.session.findFirst({
         where: { refreshToken },
@@ -127,7 +122,7 @@ export class AuthService {
     }
   }
 
-  private async generateTokens(user: User) {
+  private async generateTokens(user: User): Promise<AuthTokens> {
     const payload = {
       sub: user.id,
       phoneNumber: user.phoneNumber,
@@ -147,7 +142,10 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  async refreshToken(refreshToken: string, userId: number) {
+  async refreshToken(
+    refreshToken: string,
+    userId: number
+  ): Promise<AuthTokens> {
     const session = await this.prisma.session.findUnique({
       where: { userId_refreshToken: { userId, refreshToken } },
       include: { user: true },
@@ -167,24 +165,11 @@ export class AuthService {
     return tokens;
   }
 
-  async resetPassword(resetPasswordDto: ResetPasswordDto) {
-    const { phoneNumber, newPassword, phoneVerificationToken } =
-      resetPasswordDto;
-    const isVerified = await this.twilioService.checkVerificationCode(
-      phoneNumber,
-      phoneVerificationToken
-    );
-
-    if (!isVerified) {
-      throw ApiError.BadRequest("Phone number verification failed");
-    }
+  async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<void> {
+    const { phoneNumber, newPassword } = resetPasswordDto;
 
     const hashedPassword = await argon2.hash(newPassword);
     const user = await this.userService.getUserByPhone(phoneNumber);
-
-    if (!user) {
-      throw ApiError.NotFound("User not found");
-    }
 
     user.password = hashedPassword;
     await this.userService.updateUser(user.id, user);

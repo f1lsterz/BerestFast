@@ -1,26 +1,25 @@
 import { INestApplication } from "@nestjs/common";
 import helmet from "helmet";
 import compression from "compression";
-import cors from "cors";
 import rateLimit from "express-rate-limit";
+import hpp from "hpp";
 
 export function setupMiddlewares(app: INestApplication) {
-  app.use(cors());
-
   app.use(helmet());
+  app.use(hpp());
 
   app.use(
     rateLimit({
-      windowMs: 15 * 60 * 1000, // 15 хвилин
-      max: 100, // Макс. 100 запитів з одного IP
+      windowMs: 15 * 60 * 1000,
+      max: 100,
       message: "Too many requests from this IP, please try again later",
     })
   );
 
   app.use(
     compression({
-      level: 6, // Оптимальний рівень стиснення
-      threshold: 1024, // Стискати тільки якщо відповідь > 1KB
+      level: 6,
+      threshold: 1024,
     })
   );
 }

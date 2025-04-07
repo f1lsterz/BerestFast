@@ -1,6 +1,6 @@
 const CACHE_PREFIX = process.env.CACHE_PREFIX || "dely-cache";
 
-const CACHE_USERS = {
+export const CACHE_USERS = {
   USER: (id: number) => `${CACHE_PREFIX}:user:${id}`,
   USER_BY_PHONE: (phone: string) => `${CACHE_PREFIX}:user:${phone}`,
   ALL_USERS: `${CACHE_PREFIX}:users`,
@@ -8,7 +8,7 @@ const CACHE_USERS = {
   SESSION: (sessionId: number) => `${CACHE_PREFIX}:session:${sessionId}`,
 };
 
-const CACHE_PRODUCTS = {
+export const CACHE_PRODUCTS = {
   PRODUCT: (id: number) => `${CACHE_PREFIX}:product:${id}`,
   PRODUCT_BY_CATEGORY: (categoryId: number) =>
     `${CACHE_PREFIX}:category:${categoryId}:products`,
@@ -17,13 +17,13 @@ const CACHE_PRODUCTS = {
     `${CACHE_PREFIX}:user:${userId}:favourites`,
 };
 
-const CACHE_PAYMENTS = {};
+export const CACHE_PAYMENTS = {};
 
-const CACHE_ORDERS = {
+export const CACHE_ORDERS = {
   ORDER: (id: number) => `${CACHE_PREFIX}:order:${id}`,
   ALL_ORDERS: `${CACHE_PREFIX}:orders`,
   USER_ORDERS: (userId: number) => `${CACHE_PREFIX}:user:${userId}:orders`,
   ORDER_REVIEWS: (id: number) => `${CACHE_PREFIX}:order:${id}:reviews`,
 };
 
-const CACHE_CHATS = {};
+export const CACHE_CHATS = {};

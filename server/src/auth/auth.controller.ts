@@ -9,6 +9,10 @@ import { RefreshTokenDto } from "./dto/refresh.token.dto";
 import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { SendCodeDto } from "./dto/send.code.dto";
 import { TwilioService } from "../twilio/twilio.service";
+import { VerifyCodeDto } from "./dto/verify.code.dto";
+import { ApiError } from "src/common/errors/apiError";
+import { AuthTokens } from "./types/auth.tokens";
+import { UserWithTokens } from "./types/user.with.tokens";
 
 @ApiTags("Authentication")
 @Controller("auth")
@@ -23,7 +27,9 @@ export class AuthController {
   @ApiOperation({ summary: "User registration" })
   @ApiResponse({ status: 201, description: "User successfully registered" })
   @ApiResponse({ status: 400, description: "Validation error" })
-  async register(@Body() registrationDto: RegistrationDto) {
+  async register(
+    @Body() registrationDto: RegistrationDto
+  ): Promise<UserWithTokens> {
     return await this.authService.registration(registrationDto);
   }
 
@@ -32,7 +38,7 @@ export class AuthController {
   @ApiOperation({ summary: "User login" })
   @ApiResponse({ status: 200, description: "User successfully logged in" })
   @ApiResponse({ status: 401, description: "Invalid credentials" })
-  async login(@Body() loginDto: LoginDto) {
+  async login(@Body() loginDto: LoginDto): Promise<UserWithTokens> {
     return await this.authService.login(loginDto);
   }
 
@@ -42,7 +48,7 @@ export class AuthController {
   @ApiResponse({ status: 200, description: "New access token generated" })
   @ApiResponse({ status: 403, description: "Invalid refresh token" })
   @Access()
-  async refresh(@Body() refreshTokenDto: RefreshTokenDto) {
+  async refresh(@Body() refreshTokenDto: RefreshTokenDto): Promise<AuthTokens> {
     return await this.authService.refreshToken(
       refreshTokenDto.refreshToken,
       refreshTokenDto.userId
@@ -55,7 +61,7 @@ export class AuthController {
   @ApiResponse({ status: 200, description: "User successfully logged out" })
   @ApiResponse({ status: 400, description: "Invalid request" })
   @Access()
-  async logout(@Body() logoutDto: LogoutDto) {
+  async logout(@Body() logoutDto: LogoutDto): Promise<void> {
     return await this.authService.logout(
       logoutDto.refreshToken,
       logoutDto.allDevices
@@ -68,7 +74,9 @@ export class AuthController {
   @ApiResponse({ status: 200, description: "Password successfully reset" })
   @ApiResponse({ status: 400, description: "Phone number verification failed" })
   @ApiResponse({ status: 404, description: "User not found" })
-  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+  async resetPassword(
+    @Body() resetPasswordDto: ResetPasswordDto
+  ): Promise<void> {
     return await this.authService.resetPassword(resetPasswordDto);
   }
 
@@ -77,8 +85,26 @@ export class AuthController {
   @ApiOperation({ summary: "Send verification code to phone number" })
   @ApiResponse({ status: 200, description: "Verification code sent" })
   @ApiResponse({ status: 400, description: "Invalid phone number" })
-  async sendCode(@Body() sendCodeDto: SendCodeDto) {
-    await this.twilioService.sendVerificationCode(sendCodeDto.phoneNumber);
-    return { message: "Verification code sent successfully" };
+  async sendCode(@Body() sendCodeDto: SendCodeDto): Promise<void> {
+    return await this.twilioService.sendVerificationCode(
+      sendCodeDto.phoneNumber
+    );
+  }
+
+  @Post("verify-code")
+  @HttpCode(200)
+  @ApiOperation({ summary: "Verify the received SMS code" })
+  @ApiResponse({ status: 200, description: "Code verified successfully" })
+  @ApiResponse({ status: 400, description: "Invalid code or phone number" })
+  async verifyCode(@Body() verifyCodeDto: VerifyCodeDto): Promise<boolean> {
+    const isValid = await this.twilioService.checkVerificationCode(
+      verifyCodeDto.phoneNumber,
+      verifyCodeDto.code
+    );
+
+    if (!isValid) {
+      throw ApiError.BadRequest("Invalid verification code");
+    }
+    return true;
   }
 }

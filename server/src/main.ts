@@ -5,9 +5,11 @@ import { AllExceptionsFilter } from "./common/filters/validation.filter";
 import { validationConfig } from "./config/validation.config";
 import { SwaggerModule } from "@nestjs/swagger";
 import { swaggerConfig } from "./config/swagger.config";
+import { setupMiddlewares } from "./config/middleware.config";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  setupMiddlewares(app);
 
   const configService = app.get(ConfigService);
   const port = configService.get<number>("config.server.port") || 3000;

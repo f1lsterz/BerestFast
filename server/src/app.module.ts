@@ -29,7 +29,7 @@ import { createKeyv } from "@keyv/redis";
         const redisPort = configService.get<number>("config.redis.port", 6379);
         return {
           stores: [createKeyv(`redis://${redisHost}:${redisPort}`)],
-          compression: true, // Включення стиснення
+          compression: true,
           /*  storeOptions: {
             auth_pass: 'your-redis-password', // Якщо потрібно
             tls: true,  // Якщо підключаєтесь через захищене з'єднання
