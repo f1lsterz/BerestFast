@@ -1,8 +1,11 @@
 import CustomFetchService from "./CustomFetchServices";
-import { LoginDto } from "DTOs/loginDTOs/loginDto";
-import { LogoutDto } from "DTOs/loginDTOs/logoutDto";
-import { RegistrationDto } from "DTOs/loginDTOs/registrationDto";
-import { RefreshTokenDto } from "DTOs/loginDTOs/refreshTokenDto";
+import { LoginDto } from "DTOs/authDTOs/loginDto";
+import { LogoutDto } from "DTOs/authDTOs/logoutDto";
+import { RegistrationDto } from "DTOs/authDTOs/registrationDto";
+import { RefreshTokenDto } from "DTOs/authDTOs/refreshTokenDto";
+import { ResetPasswordFormValues } from "DTOs/authDTOs/resetPasswordFormValues";
+import { VerifyCodeFormValues } from "DTOs/authDTOs/verifyCodeFormValues";
+import { SendCodeFormValues } from "DTOs/authDTOs/sendCodeFormValues";
 
 class AuthService {
   private readonly basePath = "/auth";
@@ -26,6 +29,18 @@ class AuthService {
 
   async logout(data: LogoutDto) {
     return this.api.post(`${this.basePath}/logout`, data);
+  }
+
+  async resetPassword(data: ResetPasswordFormValues) {
+    return this.api.post(`${this.basePath}/reset-password`, data);
+  }
+
+  async sendCode(data: SendCodeFormValues) {
+    return this.api.post(`${this.basePath}/send-code`, data);
+  }
+
+  async verifyCode(data: VerifyCodeFormValues): Promise<boolean> {
+    return this.api.post(`${this.basePath}/verify-code`, data);
   }
 }
 

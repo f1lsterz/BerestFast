@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { RegistrationDto } from "DTOs/loginDTOs/registrationDto";
+import { RegistrationDto } from "DTOs/authDTOs/registrationDto";
 import { Role } from "models/role";
 
 export const RegistrationStorage = create<
@@ -17,7 +17,7 @@ export const RegistrationStorage = create<
   name: "",
   password: "",
   phoneNumber: "",
-  role: "USER", 
+  role: "USER",
   deviceName: "",
   os: "",
   appVersion: "",

@@ -6,6 +6,8 @@ const { width, height } = Dimensions.get("window");
 const style = StyleSheet.create({
   mainContainer: {
     alignItems: "center",
+    justifyContent:'space-around',
+    height:height*0.45, 
   },
   textStyle: {
     fontSize: 40,

@@ -10,7 +10,9 @@ const ProfileTextInput: React.FC<ProfileTextInputProps> = ({
 }) => {
   return (
     <View style={style.textInputContainer}>
-      <UserIcon />
+      <View style={style.iconContainer}>
+        <UserIcon />
+      </View>
       <TextInput
         style={style.textInput}
         placeholder="Введіть ваше ім'я"

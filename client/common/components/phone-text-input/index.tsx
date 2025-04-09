@@ -4,11 +4,15 @@ import PhoneIcon from "common/svg/phone-svg";
 import style from "./style";
 import { PhoneInputFieldProps } from "common/interface/PhoneInputFieldProps";
 
-const PhoneInputField: React.FC<PhoneInputFieldProps>=({ phone, setPhone }) => {
-
+const PhoneInputField: React.FC<PhoneInputFieldProps> = ({
+  phone,
+  setPhone,
+}) => {
   return (
     <View style={style.textInputContainer}>
-      <PhoneIcon />
+      <View style ={style.iconcontainer}>
+        <PhoneIcon />
+      </View>
       <TextInput
         autoFocus={true}
         style={style.textInput}

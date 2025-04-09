@@ -7,6 +7,8 @@ const style = StyleSheet.create({
   mainContainer: {
     alignItems: "center",
     width: width,
+    justifyContent:'space-around',
+    height:height*0.45,
   },
   textStyle: {
     fontSize: 40,

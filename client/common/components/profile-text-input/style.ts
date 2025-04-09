@@ -22,6 +22,9 @@ const style = StyleSheet.create({
     height: height * 0.06,
     marginTop: height * 0.04,
     alignItems: "center",
+    borderRadius:40,
+    borderWidth:1,
+    borderColor:CustomColors.White
   },
   textInput: {
     width: width * 0.77,
@@ -30,6 +33,9 @@ const style = StyleSheet.create({
     fontSize: 20,
     color: "white",
   },
+  iconContainer:{
+    marginLeft:15
+  }
 });
 
 export default style;
