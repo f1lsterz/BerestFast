@@ -59,7 +59,7 @@ const AuthorizationPasswordPageBuilder = () => {
         };
 
         performLogin(loginUser);
-        //router.navigate(`authorization/code-page?status=${status}`);
+        router.dismissTo(`main/main-page`);
       } else if (status === "sing-up") {
         setPassword(passwordReg);
         router.navigate(`/authorization/auth-user-profile-page`);

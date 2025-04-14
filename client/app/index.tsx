@@ -1,11 +1,16 @@
 import { useEffect } from "react";
-import { useRouter, useNavigationContainerRef } from "expo-router";
-import WelcomePage from "./welcome-page";
+import { useRouter } from "expo-router";
 
 export default function Index() {
   const router = useRouter();
-  const navigationRef = useNavigationContainerRef();
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      router.replace("/welcome-page");
+    }, 1);
 
-  return <WelcomePage/>; 
+    return () => clearTimeout(timeout);
+  }, []);
+
+  return null;
 }

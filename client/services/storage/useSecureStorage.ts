@@ -28,8 +28,8 @@ export const useSecureStore = create<SecureState>()(
       clearStorage: () => set({ username: '', token: '' }),
     }),
     {
-      name: 'secure-storage', // Ключ для SecureStore
-      storage: secureStorage, // Використовуємо кастомне зберігання
+      name: 'secure-storage', 
+      storage: secureStorage,
     }
   )
 );
