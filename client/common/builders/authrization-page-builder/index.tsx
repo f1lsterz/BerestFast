@@ -13,6 +13,7 @@ import authService from "services/fetches/AuthServise";
 import { SendCodeFormValues } from "DTOs/authDTOs/sendCodeFormValues";
 import ErrorComponent from "common/components/error-component";
 import { LoginStorage } from "services/storage/login-storage";
+import { useUserStore } from "services/storage/user-storage";
 
 const AuthorizationPageBuilder = () => {
   const params = useLocalSearchParams();

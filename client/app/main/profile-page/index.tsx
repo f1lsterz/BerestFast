@@ -1,8 +1,8 @@
 import React from "react";
-import MainContainerForMain from "common/components/main-component/main-container";
+import ProfilePageBuilder from "common/builders/main-builders/profile-builder";
 
 const ProfilePage = () => {
-  return <MainContainerForMain />;
+  return <ProfilePageBuilder />;
 };
 
 export default ProfilePage;

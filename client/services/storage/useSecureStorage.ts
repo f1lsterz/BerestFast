@@ -1,35 +1,37 @@
-// store/useSecureStore.ts
-import { create } from 'zustand';
-import { persist, PersistStorage } from 'zustand/middleware';
-import { saveToSecureStorage ,getFromSecureStorage,removeFromSecureStorage } from './secureStorage';
+// utils/userSecureStore.ts
+import * as SecureStore from 'expo-secure-store';
+import { User } from 'models/user';
 
-interface SecureState {
-  username: string;
-  token: string;
-  setUsername: (username: string) => void;
-  setToken: (token: string) => void;
-  clearStorage: () => void;
+const USER_KEY = 'user-data';
+
+export interface StoredUserData {
+  user: User;
+  accessToken: string;
+  refreshToken: string;
 }
 
-// Використовуємо функції з utils
-const secureStorage: PersistStorage<SecureState> = {
-  getItem: (name) => getFromSecureStorage<SecureState>(name),
-  setItem: (name, value) => saveToSecureStorage(name, value),
-  removeItem: (name) => removeFromSecureStorage(name),
+export const saveUserData = async (data: StoredUserData) => {
+  try {
+    await SecureStore.setItemAsync(USER_KEY, JSON.stringify(data));
+  } catch (error) {
+    console.error("Error saving user data:", error);
+  }
 };
 
-export const useSecureStore = create<SecureState>()(
-  persist(
-    (set) => ({
-      username: '',
-      token: '',
-      setUsername: (username) => set({ username }),
-      setToken: (token) => set({ token }),
-      clearStorage: () => set({ username: '', token: '' }),
-    }),
-    {
-      name: 'secure-storage', 
-      storage: secureStorage,
-    }
-  )
-);
+export const getUserData = async (): Promise<StoredUserData | null> => {
+  try {
+    const json = await SecureStore.getItemAsync(USER_KEY);
+    return json ? JSON.parse(json) : null;
+  } catch (error) {
+    console.error("Error retrieving user data:", error);
+    return null;
+  }
+};
+
+export const clearUserDataStorage = async () => {
+  try {
+    await SecureStore.deleteItemAsync(USER_KEY);
+  } catch (error) {
+    console.error("Error clearing user data:", error);
+  }
+};

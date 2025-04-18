@@ -15,6 +15,9 @@ import ErrorComponent from "common/components/error-component";
 import { getDeviceInfo } from "./utils";
 import { LoginDto } from "DTOs/authDTOs/loginDto";
 import authService from "services/fetches/AuthServise";
+import { User } from "models/user";
+import { useUserStore } from "services/storage/user-storage";
+
 
 const AuthorizationPasswordPageBuilder = () => {
   let loginUser: LoginDto;
@@ -30,16 +33,29 @@ const AuthorizationPasswordPageBuilder = () => {
 
   //const deviceInfo =  getDeviceInfo();
 
-  console.log(phoneNumber + " 123123")
+  console.log(phoneNumber + " 123123");
 
   //console.log(deviceInfo)
 
+  const { setUserData } = useUserStore();
+
   async function performLogin(loginUser: LoginDto) {
-    try{
-      const response = await  authService.login(loginUser);
-      console.log(response);
-    }catch(error){
-      console.log(error)
+    try {
+      const response = (await authService.login(loginUser)) as {
+        tokens: {
+          accessToken: string;
+          refreshToken: string;
+        };
+        user: User;
+      };
+
+      const { accessToken, refreshToken } = response.tokens;
+      const user = response.user;
+
+      setUserData(user, accessToken, refreshToken);
+
+    } catch (error) {
+      console.log("Login error:", error);
     }
   }
 
