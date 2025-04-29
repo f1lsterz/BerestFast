@@ -10,7 +10,7 @@ import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { SendCodeDto } from "./dto/send.code.dto";
 import { TwilioService } from "../twilio/twilio.service";
 import { VerifyCodeDto } from "./dto/verify.code.dto";
-import { ApiError } from "src/common/errors/apiError";
+import { ApiError } from "../common/errors/apiError";
 import { AuthTokens } from "./types/auth.tokens";
 import { UserWithTokens } from "./types/user.with.tokens";
 

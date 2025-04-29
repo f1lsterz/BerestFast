@@ -17,9 +17,9 @@ export class UserService {
     private readonly prisma: PrismaService
   ) {}
 
-  async getUserById(id: number) {
+  async getUserById(id: number): Promise<User | null> {
     const cacheKey = CACHE_USERS.USER(id);
-    const cachedUser = await this.cacheManager.get(cacheKey);
+    const cachedUser = await this.cacheManager.get<User | null>(cacheKey);
     if (cachedUser) {
       return cachedUser;
     }
@@ -29,7 +29,7 @@ export class UserService {
     return user;
   }
 
-  async getUserByPhone(phoneNumber: string) {
+  async getUserByPhone(phoneNumber: string): Promise<User> {
     const cacheKey = CACHE_USERS.USER_BY_PHONE(phoneNumber);
     const cachedUser = await this.cacheManager.get<User | null>(
       `user:${phoneNumber}`
@@ -49,9 +49,9 @@ export class UserService {
     return user;
   }
 
-  async getAllUsers() {
+  async getAllUsers(): Promise<User[]> {
     const cacheKey = CACHE_USERS.ALL_USERS;
-    const cachedUsers = await this.cacheManager.get(cacheKey);
+    const cachedUsers = await this.cacheManager.get<User[]>(cacheKey);
 
     if (cachedUsers) {
       return cachedUsers;
@@ -62,7 +62,7 @@ export class UserService {
     return users;
   }
 
-  async createUser(createUserDto: CreateUserDto) {
+  async createUser(createUserDto: CreateUserDto): Promise<User> {
     const newUser = await this.prisma.user.create({ data: createUserDto });
 
     await this.cacheManager.del(CACHE_USERS.ALL_USERS);
@@ -70,7 +70,10 @@ export class UserService {
     return newUser;
   }
 
-  async updateUser(userId: number, updateUserDto: UpdateUserDto) {
+  async updateUser(
+    userId: number,
+    updateUserDto: UpdateUserDto
+  ): Promise<User> {
     const updatedUser = await this.prisma.user.update({
       where: { id: userId },
       data: updateUserDto,
@@ -82,7 +85,19 @@ export class UserService {
     return updatedUser;
   }
 
-  async deleteUser(userId: number) {
+  async updateUserPhone(userId: number, userPhone: string): Promise<User> {
+    const updatedUser = await this.prisma.user.update({
+      where: { id: userId },
+      data: { phoneNumber: userPhone },
+    });
+
+    await this.cacheManager.del(CACHE_USERS.USER(userId));
+    await this.cacheManager.del(CACHE_USERS.ALL_USERS);
+
+    return updatedUser;
+  }
+
+  async deleteUser(userId: number): Promise<User> {
     const deletedUser = await this.prisma.user.delete({
       where: { id: userId },
     });
@@ -93,7 +108,10 @@ export class UserService {
     return deletedUser;
   }
 
-  async createUserSession(userId: number, createSessionDto: CreateSessionDto) {
+  async createUserSession(
+    userId: number,
+    createSessionDto: CreateSessionDto
+  ): Promise<Session> {
     const existingSession = await this.prisma.session.findFirst({
       where: {
         userId,
@@ -124,7 +142,7 @@ export class UserService {
   async updateUserSession(
     sessionId: number,
     updateSessionDto: UpdateSessionDto
-  ) {
+  ): Promise<Session> {
     const updatedSession = await this.prisma.session.update({
       where: { id: sessionId },
       data: {
@@ -144,7 +162,7 @@ export class UserService {
     return updatedSession;
   }
 
-  async getUserSession(sessionId: number) {
+  async getUserSession(sessionId: number): Promise<Session | null> {
     const cacheKey = CACHE_USERS.SESSION(sessionId);
     const cachedSession = await this.cacheManager.get<Session | null>(cacheKey);
 
@@ -161,9 +179,9 @@ export class UserService {
     return session;
   }
 
-  async getUserSessions(userId: number) {
+  async getUserSessions(userId: number): Promise<Session[]> {
     const cacheKey = CACHE_USERS.USER_SESSIONS(userId);
-    const cachedSessions = await this.cacheManager.get(cacheKey);
+    const cachedSessions = await this.cacheManager.get<Session[]>(cacheKey);
 
     if (cachedSessions) {
       return cachedSessions;
@@ -185,7 +203,7 @@ export class UserService {
     return deletedSessions;
   }
 
-  async deleteUserSession(sessionId: number) {
+  async deleteUserSession(sessionId: number): Promise<Session> {
     const deletedSession = await this.prisma.session.delete({
       where: { id: sessionId },
     });

@@ -3,8 +3,10 @@ import helmet from "helmet";
 import compression from "compression";
 import rateLimit from "express-rate-limit";
 import hpp from "hpp";
+import cors from "cors";
 
 export function setupMiddlewares(app: INestApplication) {
+  app.use(cors());
   app.use(helmet());
   app.use(hpp());
 

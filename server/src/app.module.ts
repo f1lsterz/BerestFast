@@ -10,6 +10,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { PrismaModule } from "./prisma.module";
 import { CacheModule } from "@nestjs/cache-manager";
 import { createKeyv } from "@keyv/redis";
+import { ChoiceQRModule } from "./parser/choiceqr.module";
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { createKeyv } from "@keyv/redis";
     ChatModule,
     PaymentModule,
     PrismaModule,
+    ChoiceQRModule,
   ],
 })
 export class AppModule {}

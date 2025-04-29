@@ -22,6 +22,7 @@ import { CreateSessionDto } from "./dto/create.session.dto";
 import { UniquePhoneNumberPipe } from "../common/pipes/ExistBy/UserByPhone";
 import { Access } from "../common/decorators/access.decorator";
 import { Role } from "@prisma/client";
+import { PhoneDto } from "./dto/phone.dto";
 
 @ApiTags("Users")
 @Controller("users")
@@ -35,11 +36,13 @@ export class UserController {
   @ApiResponse({ status: HttpStatus.OK, description: "User found", type: User })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: "User not found" })
   @Access()
-  async getUserById(@Param("userId", UserByIdNotPipe) userId: number) {
-    return await this.userService.getUserById(userId);
+  async getUserById(
+    @Param("userId", UserByIdNotPipe) userId: number
+  ): Promise<User | null> {
+    return this.userService.getUserById(userId);
   }
 
-  @Get("phone/:phoneNumber")
+  @Get("by-phone")
   @HttpCode(200)
   @ApiOperation({ summary: "Get user by phone number" })
   @ApiParam({
@@ -50,8 +53,8 @@ export class UserController {
   @ApiResponse({ status: HttpStatus.OK, description: "User found", type: User })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: "User not found" })
   @Access()
-  async getUserByPhone(@Param("phoneNumber") phoneNumber: string) {
-    return await this.userService.getUserByPhone(phoneNumber);
+  async getUserByPhone(@Body() PhoneDto: PhoneDto): Promise<User> {
+    return this.userService.getUserByPhone(PhoneDto.phoneNumber);
   }
 
   @Get()
@@ -63,7 +66,7 @@ export class UserController {
     type: [User],
   })
   @Access(Role.ADMIN)
-  async getAllUsers() {
+  async getAllUsers(): Promise<User[]> {
     return this.userService.getAllUsers();
   }
 
@@ -91,6 +94,23 @@ export class UserController {
     @Body() updateUserDto: UpdateUserDto
   ) {
     return await this.userService.updateUser(userId, updateUserDto);
+  }
+
+  @Patch(":userId/phoneChange")
+  @HttpCode(204)
+  @ApiOperation({ summary: "Update user phone" })
+  @ApiParam({ name: "userId", required: true, description: "User ID" })
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: "Phone number updated",
+  })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: "User not found" })
+  @Access()
+  async updateUserPhone(
+    @Param("userId", UserByIdNotPipe) userId: number,
+    @Body() changePhoneDto: PhoneDto
+  ): Promise<void> {
+    await this.userService.updateUserPhone(userId, changePhoneDto.phoneNumber);
   }
 
   @Delete(":userId")
