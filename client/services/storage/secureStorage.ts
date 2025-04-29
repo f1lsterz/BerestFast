@@ -1,8 +1,6 @@
-// utils/secureStorage.ts
 import * as SecureStore from 'expo-secure-store';
 import { StorageValue } from 'zustand/middleware';
 
-// Збереження значення
 export const saveToSecureStorage = async (key: string, value: unknown) => {
   await SecureStore.setItemAsync(key, JSON.stringify(value));
 };

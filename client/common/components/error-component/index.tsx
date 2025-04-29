@@ -1,11 +1,7 @@
 import React from "react";
 import { View, Text, Modal, Pressable } from "react-native";
 import style from "./style";
-
-type ErrorComponentProps = {
-  isModal: boolean;
-  errorMessage: string;
-};
+import { ErrorComponentProps } from "common/interface/ErrorComponentProps";
 
 const ErrorComponent: React.FC<ErrorComponentProps> = ({
   isModal,
@@ -15,7 +11,7 @@ const ErrorComponent: React.FC<ErrorComponentProps> = ({
 
   return (
     <View>
-      <Text style = {style.errorMessageTextStyle}>{errorMessage}</Text>
+      <Text style={style.errorMessageTextStyle}>{errorMessage}</Text>
     </View>
   );
 };

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, TextInput, StyleSheet } from "react-native";
+import { View, TextInput } from "react-native";
 import UserIcon from "common/svg/user-icon";
 import { CodeInputProps } from "common/interface/CodeInputProps";
 import style from "./style";

@@ -7,4 +7,5 @@ export enum CustomColors {
   White = "#FFFFFF",
   Yellow = "#FFC618",
   Gray = "#C7C8CE",
+  DarkGray = "#333333",
 }

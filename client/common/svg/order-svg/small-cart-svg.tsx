@@ -1,0 +1,23 @@
+import React from "react";
+import Svg, { Path } from "react-native-svg";
+import { SvgProps } from "../model";
+import { CustomColors } from "common/enum/colors";
+
+export const SmallCartSvg: React.FC<SvgProps> = ({ height, width, color }) => {
+  const size = height ?? width ?? 24;
+  const fillColor = color ? CustomColors[color] : "#ADB3BC";
+
+  return (
+    <Svg
+      width={width ?? size}
+      height={height ?? size}
+      viewBox="0 0 21 20"
+      fill="none"
+    >
+      <Path
+        d="M15.05 11C15.8 11 16.46 10.59 16.8 9.97L20.38 3.48C20.75 2.82 20.27 2 19.51 2H4.71L3.77 0H0.5V2H2.5L6.1 9.59L4.75 12.03C4.02 13.37 4.98 15 6.5 15H18.5V13H6.5L7.6 11H15.05ZM5.66 4H17.81L15.05 9H8.03L5.66 4ZM6.5 16C5.4 16 4.51 16.9 4.51 18C4.51 19.1 5.4 20 6.5 20C7.6 20 8.5 19.1 8.5 18C8.5 16.9 7.6 16 6.5 16ZM16.5 16C15.4 16 14.51 16.9 14.51 18C14.51 19.1 15.4 20 16.5 20C17.6 20 18.5 19.1 18.5 18C18.5 16.9 17.6 16 16.5 16Z"
+        fill={fillColor}
+      />
+    </Svg>
+  );
+};
