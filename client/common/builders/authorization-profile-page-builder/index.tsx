@@ -9,41 +9,62 @@ import { RegistrationStorage } from "services/storage/registration-storage";
 import { validateName } from "common/validators/name-validator";
 import { RegistrationDto } from "DTOs/authDTOs/registrationDto";
 import authService from "services/fetches/AuthServise";
+import { useRouter } from "expo-router";
+import { useUserStore } from "services/storage/user-storage";
+import { User } from "models/user";
 
 const AuthorizationProfilePageBuilder = () => {
   const [nameReg, setNameReg] = useState("");
   const [isVisible, setisVisible] = useState(false);
   let registrationData: RegistrationDto;
-  const { setName, name, password, phoneNumber } = RegistrationStorage();
+  const router = useRouter();
+  const { setName, password, phoneNumber } = RegistrationStorage();
+  const { setUserData } = useUserStore();
 
   async function performRegistration(registrationData: RegistrationDto) {
     try {
       const response = await authService.register(registrationData);
+      if (
+        (response.status === 200 || response.status === 201) &&
+        response.data
+      ) {
+        const { tokens, user } = response.data as {
+          tokens: { accessToken: string; refreshToken: string };
+          user: User;
+        };
+
+        const { accessToken, refreshToken } = tokens;
+        console.log(user + "123123123123123 ");
+        setUserData(user, accessToken, refreshToken);
+      } else {
+        console.log("Login failed, status:", response.status);
+      }
+
       console.log(response);
     } catch (error) {
       console.log(error);
     }
   }
-  console.log(name + " gggg//// " + password + " ggg/// " + phoneNumber);
 
-  const handleOnPress = () => {
+  const handleOnPress = async () => {
     let IsValid: boolean = validateName(nameReg);
-    
+
     registrationData = {
       name: nameReg,
       password: password,
       phoneNumber: phoneNumber,
       role: "USER",
-      deviceName: 'Samsung Galaxy S21',
-      os: 'Android 12',
-      appVersion: '1.2.0',
-      ipAddress: '192.168.1.100',
+      deviceName: "Samsung Galaxy S21",
+      os: "Android 12",
+      appVersion: "1.2.0",
+      ipAddress: "192.168.1.100",
     };
 
     if (IsValid) {
       setisVisible(false);
       setName(nameReg);
-      performRegistration(registrationData);
+      await performRegistration(registrationData);
+      router.dismissTo(`main/main-page`);
     } else {
       setisVisible(true);
     }

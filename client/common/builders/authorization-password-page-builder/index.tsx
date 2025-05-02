@@ -28,7 +28,7 @@ const AuthorizationPasswordPageBuilder = () => {
   const [passwordReg, setPasswordReg] = useState("");
   const [IsVisible, setVisible] = useState(false);
 
-  const { setPassword } = RegistrationStorage();
+  const { setPassword  } = RegistrationStorage();
   const { setPasswordLogin, phoneNumber } = LoginStorage();
 
   //const deviceInfo =  getDeviceInfo();
@@ -41,21 +41,23 @@ const AuthorizationPasswordPageBuilder = () => {
 
   async function performLogin(loginUser: LoginDto) {
     try {
-      const response = (await authService.login(loginUser)) as {
-        tokens: {
-          accessToken: string;
-          refreshToken: string;
+      const response = await authService.login(loginUser);
+  
+      if (response.status === 200 && response.data) {
+        const { tokens, user } = response.data as {
+          tokens: { accessToken: string; refreshToken: string };
+          user: User;
         };
-        user: User;
-      };
-
-      const { accessToken, refreshToken } = response.tokens;
-      const user = response.user;
-
-      setUserData(user, accessToken, refreshToken);
-
+  
+        const { accessToken, refreshToken } = tokens;
+  
+        setUserData(user, accessToken, refreshToken);
+      } else {
+        console.log("Login failed, status:", response.status);
+      }
+  
     } catch (error) {
-      console.log("Login error:", error);
+      console.error("Login error:", error);
     }
   }
 

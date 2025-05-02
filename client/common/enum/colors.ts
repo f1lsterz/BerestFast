@@ -8,4 +8,6 @@ export enum CustomColors {
   Yellow = "#FFC618",
   Gray = "#C7C8CE",
   DarkGray = "#333333",
+  Black = "black",
+  DarkBlue = "#0B1E3F" 
 }

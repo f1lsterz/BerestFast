@@ -6,7 +6,7 @@ export default function Index() {
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      router.replace("/welcome-page");
+      router.replace("/main/main-page");
     }, 1);
 
     return () => clearTimeout(timeout);

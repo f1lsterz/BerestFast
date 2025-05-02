@@ -8,16 +8,20 @@ const CartPageTextArticle = () => {
 
   const handleOnPress = () => {
     router.dismissAll();
-    router.dismissTo(("/main/main-page"));
+    router.dismissTo("/main/main-page");
   };
 
   return (
-    <View>
-      <Text></Text>
-      <TouchableOpacity onPress={handleOnPress}>
-        <Text>каталог</Text>
-      </TouchableOpacity>
-      <Text></Text>
+    <View style={style.mainContainer}>
+      <Text style={style.textDefStyle}>Ваш кошик пустий</Text>
+      <View style={style.containerCatalogButton}>
+        <Text style={style.textDefStyle}>Натисніть </Text>
+        <TouchableOpacity onPress={handleOnPress}>
+          <Text style={style.buttonTextStyle}>каталог</Text>
+        </TouchableOpacity>
+        <Text style={style.textDefStyle}> щоб обрати</Text>
+      </View>
+      <Text style={style.textDefStyle}>бажаний товар</Text>
     </View>
   );
 };

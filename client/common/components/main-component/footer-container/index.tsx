@@ -15,10 +15,18 @@ const FooterContainer = () => {
 
   const [isOrderSelected, setIsOrderSelected] = useState(false);
   const [isMainSelected, setisMainSelected] = useState(false);
+  const [isProfileSelected, setisProfileSelected] = useState(false);
 
   useEffect(() => {
     setIsOrderSelected(
       pathName === "/main/order-page" || pathName === "/main/cart-page"
+    );
+  }, [pathName]);
+
+  useEffect(() => {
+    setisProfileSelected(
+      pathName === "/main/profile-page" ||
+        pathName === "/main/profile-about-page"
     );
   }, [pathName]);
 
@@ -67,13 +75,13 @@ const FooterContainer = () => {
   const profileButton = () => {
     return (
       <CustomButton
-        selected={pathName === "/main/profile-page"}
+        selected={isProfileSelected}
         color="Primary"
         unselectedColor="DarkGray"
         text={bottomButtom[2]}
         pressHandle={handlProfileButtonh}
         Svg={() =>
-          pathName === "/main/profile-page" ? (
+          isProfileSelected ? (
             <NavBarSvg.ProfileIcon height={25} color="Primary" />
           ) : (
             <NavBarSvg.ProfileIcon height={25} color="DarkGray" />

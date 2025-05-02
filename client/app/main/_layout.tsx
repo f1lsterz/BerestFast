@@ -14,6 +14,7 @@ export default function Layout() {
         <Stack.Screen name="main-page/index" />
         <Stack.Screen name="order-page/index" />
         <Stack.Screen name="profile-page/index" />
+        <Stack.Screen name="profile-about-page/index" />
         <Stack.Screen name="cart-page/index" />
         <Slot />
       </Stack>

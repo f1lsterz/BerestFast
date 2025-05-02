@@ -8,6 +8,7 @@ export default function Layout() {
       <Stack.Screen name="authorization" options={{ headerShown: false }} />
       <Stack.Screen name="welcome-page/index" options={{ headerShown: false }} />
       <Stack.Screen name="main" options={{ headerShown: false }} />
+      <Stack.Screen name="settings-page/index" options={{ headerShown: false }} />
       <Slot />
     </Stack>
   );

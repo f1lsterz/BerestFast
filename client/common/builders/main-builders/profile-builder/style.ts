@@ -7,32 +7,21 @@ const style = StyleSheet.create({
   mainContainer: {
     alignItems: "center",
   },
-
-  photoContainerStyle: {
-    width: height * 0.2,
-    height: height * 0.2,
-    borderRadius: 500,
-    marginTop: height * 0.03,
-  },
-
-  emptyPgotoContainerStyle: {
-    width: height * 0.2,
-    height: height * 0.2,
-    borderRadius: 500,
-    backgroundColor: CustomColors.Gray,
-    marginTop: height * 0.03,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  textContainer: {
-    marginTop: height * 0.04,
-    alignItems: "center",
+  centralPart: {
+    flexGrow: 1 ,
+    marginTop: height * 0.05,
+    backgroundColor: CustomColors.DarkBlue,
+    width: width,
+    borderRadius: 30,
+    height: height * 0.75,
   },
   textStyle: {
     fontSize: 30,
     color: CustomColors.White,
+    marginLeft: width * 0.1,
+    marginTop: width * 0.1,
   },
+
 });
 
 export default style;
