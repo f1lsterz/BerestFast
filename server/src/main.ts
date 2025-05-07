@@ -6,6 +6,7 @@ import { validationConfig } from "./config/validation.config";
 import { SwaggerModule } from "@nestjs/swagger";
 import { swaggerConfig } from "./config/swagger.config";
 import { setupMiddlewares } from "./config/middleware.config";
+import { TimeoutInterceptor } from "./common/interceptors/timeout.interceptor";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,6 +17,7 @@ async function bootstrap() {
 
   app.useGlobalPipes(validationConfig);
   app.useGlobalFilters(new AllExceptionsFilter());
+  app.useGlobalInterceptors(new TimeoutInterceptor());
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup("api", app, document);

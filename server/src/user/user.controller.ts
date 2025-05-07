@@ -78,7 +78,9 @@ export class UserController {
     description: "User created",
     type: User,
   })
-  async createUser(@Body(UniquePhoneNumberPipe) createUserDto: CreateUserDto) {
+  async createUser(
+    @Body(UniquePhoneNumberPipe) createUserDto: CreateUserDto
+  ): Promise<User> {
     return this.userService.createUser(createUserDto);
   }
 
@@ -92,7 +94,7 @@ export class UserController {
   async updateUser(
     @Param("userId", UserByIdNotPipe) userId: number,
     @Body() updateUserDto: UpdateUserDto
-  ) {
+  ): Promise<User> {
     return await this.userService.updateUser(userId, updateUserDto);
   }
 
@@ -120,7 +122,9 @@ export class UserController {
   @ApiResponse({ status: HttpStatus.NO_CONTENT, description: "User deleted" })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: "User not found" })
   @Access(Role.ADMIN)
-  async deleteUser(@Param("userId", UserByIdNotPipe) userId: number) {
+  async deleteUser(
+    @Param("userId", UserByIdNotPipe) userId: number
+  ): Promise<User> {
     return await this.userService.deleteUser(userId);
   }
 
@@ -137,7 +141,7 @@ export class UserController {
   async createUserSession(
     @Param("userId", UserByIdNotPipe) userId: number,
     createSessionDto: CreateSessionDto
-  ) {
+  ): Promise<Session> {
     return await this.userService.createUserSession(userId, createSessionDto);
   }
 
@@ -154,11 +158,27 @@ export class UserController {
   async updateUserSession(
     @Param("sessionId", SessionByIdNotPipe) sessionId: number,
     updateSessionDto: UpdateSessionDto
-  ) {
+  ): Promise<Session> {
     return await this.userService.updateUserSession(
       sessionId,
       updateSessionDto
     );
+  }
+
+  @Get("sessions/:sessionId")
+  @HttpCode(200)
+  @ApiOperation({ summary: "Get a specific session by ID" })
+  @ApiParam({ name: "sessionId", required: true, description: "Session ID" })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: "Single session data",
+    type: Session,
+  })
+  @Access()
+  async getUserSession(
+    @Param("sessionId", SessionByIdNotPipe) sessionId: number
+  ): Promise<Session | null> {
+    return await this.userService.getUserSession(sessionId);
   }
 
   @Get(":userId/sessions")
@@ -171,7 +191,9 @@ export class UserController {
     type: [Session],
   })
   @Access()
-  async getUserSessions(@Param("userId", UserByIdNotPipe) userId: number) {
+  async getUserSessions(
+    @Param("userId", UserByIdNotPipe) userId: number
+  ): Promise<Session[]> {
     return await this.userService.getUserSessions(userId);
   }
 
@@ -184,7 +206,9 @@ export class UserController {
     description: "Sessions deleted",
   })
   @Access()
-  async deleteUserSessions(@Param("userId", UserByIdNotPipe) userId: number) {
+  async deleteUserSessions(
+    @Param("userId", UserByIdNotPipe) userId: number
+  ): Promise<{ count: number }> {
     return await this.userService.deleteUserSessions(userId);
   }
 
@@ -198,7 +222,7 @@ export class UserController {
   @Access()
   async deleteUserSession(
     @Param("sessionId", SessionByIdNotPipe) sessionId: number
-  ) {
+  ): Promise<Session> {
     return await this.userService.deleteUserSession(sessionId);
   }
 }

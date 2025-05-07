@@ -193,7 +193,7 @@ export class UserService {
     return sessions;
   }
 
-  async deleteUserSessions(userId: number) {
+  async deleteUserSessions(userId: number): Promise<{ count: number }> {
     const deletedSessions = await this.prisma.session.deleteMany({
       where: { userId },
     });

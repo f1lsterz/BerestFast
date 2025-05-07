@@ -13,6 +13,7 @@ import { VerifyCodeDto } from "./dto/verify.code.dto";
 import { ApiError } from "../common/errors/apiError";
 import { AuthTokens } from "./types/auth.tokens";
 import { UserWithTokens } from "./types/user.with.tokens";
+import { UniquePhoneNumberPipe } from "src/common/pipes/ExistBy/UserByPhone";
 
 @ApiTags("Authentication")
 @Controller("auth")
@@ -28,7 +29,7 @@ export class AuthController {
   @ApiResponse({ status: 201, description: "User successfully registered" })
   @ApiResponse({ status: 400, description: "Validation error" })
   async register(
-    @Body() registrationDto: RegistrationDto
+    @Body(UniquePhoneNumberPipe) registrationDto: RegistrationDto
   ): Promise<UserWithTokens> {
     return await this.authService.registration(registrationDto);
   }

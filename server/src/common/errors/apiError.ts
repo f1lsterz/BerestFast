@@ -27,4 +27,8 @@ export class ApiError extends Error {
   static Forbidden(message: string) {
     return new ApiError(403, message);
   }
+
+  static RequestTimeout(message: string) {
+    return new ApiError(408, message);
+  }
 }

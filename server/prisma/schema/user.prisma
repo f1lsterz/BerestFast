@@ -1,0 +1,45 @@
+model User {
+  id Int @id @default(autoincrement())
+  phoneNumber String @unique
+  name String @db.VarChar(100)
+  password String 
+  photoUrl String?
+  role Role @default(USER)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  restaurantPartners RestaurantPartner[]
+  chatParticipants ChatParticipant[]
+  messages Message[]
+  sessions Session[]
+  orders Order[] @relation("UserOrders")
+  deliveries Order[] @relation("CourierOrders")
+  favouriteProducts Favourite_Product[]
+  userAddresses Users_Addresses[]
+  payments Payment[]
+  reviews Order_Review[]
+}
+
+model Session {
+  id Int @id @default(autoincrement())
+  refreshToken String @db.VarChar(500)
+  deviceName String
+  os String 
+  appVersion String
+  ipAddress String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  userId Int @map("user_id")
+  user User @relation(fields: [userId], references: [id]) 
+  @@unique([userId, refreshToken])
+}
+
+enum Role {
+  USER
+  ADMIN
+  COURIER
+  PARTNER
+}

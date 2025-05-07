@@ -21,11 +21,11 @@ export class CreateSessionDto {
   @IsString()
   appVersion: string;
 
+  @IsOptional()
+  @IsIP()
   @ApiPropertyOptional({
     example: "192.168.1.1",
     description: "IP-адреса пристрою (необов’язково)",
   })
-  @IsOptional()
-  @IsIP()
-  ipAddress?: string;
+  ipAddress?: string | null;
 }
