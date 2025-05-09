@@ -1,10 +1,10 @@
 model Product {
     id Int @id @default(autoincrement())
     name String
-    description String @db.Text
     price Decimal @db.Decimal(10, 2)
+    newPrice    Decimal? @db.Decimal(10, 2)  @map("new_price")
+    hasDiscount Boolean @default(false) @map("has_discount")
     image_url String
-    unit UnitType
 
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @updatedAt @map("updated_at")
@@ -21,14 +21,6 @@ model Product {
     @@index([name])
     @@index([storeId])
     @@index([restaurantId])
-}
-
-enum UnitType {
-    PIECE
-    GRAM
-    KILOGRAM
-    MILLILITER
-    LITER
 }
 
 model Category {

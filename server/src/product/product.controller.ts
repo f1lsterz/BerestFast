@@ -21,15 +21,11 @@ import { CreateProductDto } from "./dto/create.product.dto";
 import { UpdateProductDto } from "./dto/update.product.dto";
 import { Access } from "../common/decorators/access.decorator";
 import { Role } from "@prisma/client";
-import { ProductParserService } from "../ProductParserService";
 
 @ApiTags("Products")
 @Controller("products")
 export class ProductController {
-  constructor(
-    private readonly productService: ProductService,
-    private readonly productParserService: ProductParserService
-  ) {}
+  constructor(private readonly productService: ProductService) {}
 
   @Get()
   @HttpCode(200)
@@ -108,13 +104,6 @@ export class ProductController {
     @Query("productId") productId: number
   ) {
     return this.productService.removeFromFavourites(userId, productId);
-  }
-
-  @Get("parse")
-  @HttpCode(200)
-  @ApiOperation({ summary: "Parse products from external source" })
-  async parseProducts() {
-    return this.productParserService.parseAllProducts();
   }
 
   @Get("categories")

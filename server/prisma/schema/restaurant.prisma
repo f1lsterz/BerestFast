@@ -5,7 +5,6 @@ model Restaurant {
   logoUrl String?
 
   partners RestaurantPartner[]
-
   products Product[]
 
   createdAt DateTime @default(now()) @map("created_at")

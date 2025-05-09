@@ -16,10 +16,12 @@ import {
   ApiParam,
   ApiBody,
   ApiTags,
+  ApiQuery,
 } from "@nestjs/swagger";
 import { CreateOrderDto } from "./dto/create.order.dto";
 import { CreateReviewDto } from "./dto/create.review.dto";
 import { Access } from "../common/decorators/access.decorator";
+import { Role } from "@prisma/client";
 
 @ApiTags("Orders")
 @Controller("orders")
@@ -27,7 +29,7 @@ export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @Post()
-  @HttpCode(200)
+  @HttpCode(201)
   @ApiOperation({ summary: "Create a new order" })
   @ApiBody({ type: CreateOrderDto })
   @ApiResponse({ status: 201, description: "Order created successfully" })
@@ -38,20 +40,27 @@ export class OrderController {
     return this.orderService.createOrder(userId, courierId, orderItems);
   }
 
+  @Get(":orderId")
+  @HttpCode(200)
   @ApiOperation({ summary: "Get order by ID" })
   @ApiParam({ name: "orderId", description: "Order ID" })
   @ApiResponse({ status: 200, description: "Order found" })
   @ApiResponse({ status: 404, description: "Order not found" })
-  @Get(":orderId")
   @Access()
   async getOrderById(@Param("orderId") orderId: number) {
     return this.orderService.getOrderById(orderId);
   }
 
-  @ApiOperation({ summary: "Get all orders" })
-  @ApiResponse({ status: 200, description: "All orders retrieved" })
   @Get()
-  @Access()
+  @HttpCode(200)
+  @ApiOperation({ summary: "Get all orders" })
+  @ApiQuery({
+    name: "status",
+    required: false,
+    description: "Filter by order status",
+  })
+  @ApiResponse({ status: 200, description: "All orders retrieved" })
+  @Access(Role.ADMIN, Role.COURIER, Role.PARTNER)
   async getAllOrders() {
     return this.orderService.getAllOrders();
   }

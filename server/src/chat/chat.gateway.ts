@@ -9,14 +9,10 @@ import { ChatService } from "./chat.service";
 import { Server, Socket } from "socket.io";
 import { SendMessageDto } from "./dto/send.message.dto";
 import { UploadedFile } from "@nestjs/common";
-import { AWSService } from "../aws/aws.service";
 
 @WebSocketGateway()
 export class ChatGateway {
-  constructor(
-    private readonly chatService: ChatService,
-    private readonly awsService: AWSService
-  ) {}
+  constructor(private readonly chatService: ChatService) {}
 
   @WebSocketServer()
   server: Server;

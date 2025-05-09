@@ -9,16 +9,12 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { ChatService } from "./chat.service";
-import { AWSService } from "../aws/aws.service";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { SendMessageDto } from "./dto/send.message.dto";
 
 @Controller("chats")
 export class ChatController {
-  constructor(
-    private readonly chatService: ChatService,
-    private readonly awsService: AWSService
-  ) {}
+  constructor(private readonly chatService: ChatService) {}
 
   @Get(":chatId/messages")
   getMessages(

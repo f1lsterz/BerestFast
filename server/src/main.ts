@@ -17,7 +17,7 @@ async function bootstrap() {
 
   app.useGlobalPipes(validationConfig);
   app.useGlobalFilters(new AllExceptionsFilter());
-  app.useGlobalInterceptors(new TimeoutInterceptor());
+  //app.useGlobalInterceptors(new TimeoutInterceptor());
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup("api", app, document);
