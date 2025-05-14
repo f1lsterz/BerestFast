@@ -37,10 +37,9 @@ describe("ProductService", () => {
     it("should create a product and invalidate cache", async () => {
       const dto: CreateProductDto = {
         name: "Test Product",
-        description: "Test Description",
         price: 100.5,
+        hasDiscount: false,
         image_url: "https://example.com/image.jpg",
-        unit: "PIECE",
         categoryId: 1,
       };
 

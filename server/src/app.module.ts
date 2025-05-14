@@ -11,6 +11,8 @@ import { PrismaModule } from "./prisma.module";
 import { CacheModule } from "@nestjs/cache-manager";
 import { createKeyv } from "@keyv/redis";
 import { ParserModule } from "./parsers/parser.module";
+import { APP_INTERCEPTOR } from "@nestjs/core";
+import { TimeoutInterceptor } from "./common/interceptors/timeout.interceptor";
 
 @Module({
   imports: [
@@ -46,6 +48,12 @@ import { ParserModule } from "./parsers/parser.module";
     PaymentModule,
     PrismaModule,
     ParserModule,
+  ],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TimeoutInterceptor,
+    },
   ],
 })
 export class AppModule {}

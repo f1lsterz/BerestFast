@@ -24,9 +24,9 @@ export class ChatGateway {
   ) {
     let imageUrl: string | undefined = undefined;
 
-    if (file) {
+    /*     if (file) {
       imageUrl = await this.awsService.uploadChatImage(file);
-    }
+    } */
 
     const message = await this.chatService.sendMessage({
       ...sendMessageDto,

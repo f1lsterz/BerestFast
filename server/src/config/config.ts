@@ -23,16 +23,6 @@ export default registerAs("config", () => ({
     port: process.env.REDIS_PORT || 6379,
     cachePrefix: process.env.CACHE_PREFIX || "dely-cache",
   },
-  aws: {
-    region: process.env.AWS_REGION || "us-east-1",
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    s3: {
-      bucket: process.env.AWS_S3_BUCKET_NAME || "dely-files",
-      productImagesFolder: "products/",
-      chatImagesFolder: "chats/",
-    },
-  },
   twilio: {
     accountSid: process.env.TWILIO_ACCOUNT_SID,
     authToken: process.env.TWILIO_AUTH_TOKEN,

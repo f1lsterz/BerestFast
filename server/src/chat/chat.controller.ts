@@ -48,9 +48,9 @@ export class ChatController {
   ) {
     let imageUrl: string | undefined = undefined;
 
-    if (file) {
+    /*     if (file) {
       imageUrl = await this.awsService.uploadChatImage(file);
-    }
+    } */
 
     return this.chatService.sendMessage({ ...sendMessageDto, imageUrl });
   }

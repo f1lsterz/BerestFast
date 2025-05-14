@@ -21,7 +21,7 @@ import {
 import { CreateOrderDto } from "./dto/create.order.dto";
 import { CreateReviewDto } from "./dto/create.review.dto";
 import { Access } from "../common/decorators/access.decorator";
-import { Role } from "@prisma/client";
+import { Order, Order_Review, Role } from "@prisma/client";
 
 @ApiTags("Orders")
 @Controller("orders")
@@ -35,7 +35,7 @@ export class OrderController {
   @ApiResponse({ status: 201, description: "Order created successfully" })
   @ApiResponse({ status: 400, description: "Invalid order data" })
   @Access()
-  async createOrder(@Body() createOrderDto: CreateOrderDto) {
+  async createOrder(@Body() createOrderDto: CreateOrderDto): Promise<Order> {
     const { userId, courierId, orderItems } = createOrderDto;
     return this.orderService.createOrder(userId, courierId, orderItems);
   }
@@ -47,7 +47,7 @@ export class OrderController {
   @ApiResponse({ status: 200, description: "Order found" })
   @ApiResponse({ status: 404, description: "Order not found" })
   @Access()
-  async getOrderById(@Param("orderId") orderId: number) {
+  async getOrderById(@Param("orderId") orderId: number): Promise<Order | null> {
     return this.orderService.getOrderById(orderId);
   }
 
@@ -61,54 +61,62 @@ export class OrderController {
   })
   @ApiResponse({ status: 200, description: "All orders retrieved" })
   @Access(Role.ADMIN, Role.COURIER, Role.PARTNER)
-  async getAllOrders() {
+  async getAllOrders(): Promise<Order[]> {
     return this.orderService.getAllOrders();
   }
 
+  @Get("user/:userId")
+  @HttpCode(200)
   @ApiOperation({ summary: "Get all orders of a user" })
   @ApiParam({ name: "userId", description: "User ID" })
   @ApiResponse({ status: 200, description: "User orders retrieved" })
   @ApiResponse({ status: 404, description: "Orders not found" })
-  @Get("user/:userId")
   @Access()
-  async getUserOrders(@Param("userId") userId: number) {
+  async getUserOrders(@Param("userId") userId: number): Promise<Order[]> {
     return this.orderService.getUserOrders(userId);
   }
 
+  @Post(":orderId/review")
+  @HttpCode(201)
   @ApiOperation({ summary: "Add a review for an order" })
-  @ApiParam({ name: "orderId", description: "Order ID" })
+  @ApiParam({ name: "orderId", required: true, description: "Order ID" })
   @ApiBody({ type: CreateReviewDto })
   @ApiResponse({ status: 201, description: "Review added successfully" })
   @ApiResponse({ status: 400, description: "Invalid review data" })
-  @Post(":orderId/review")
   @Access()
   async addOrderReview(
     @Param("orderId") orderId: number,
     @Body() createReviewDto: CreateReviewDto
   ) {
-    const { userId, rating, comment } = createReviewDto;
-    return this.orderService.addOrderReview(orderId, userId, rating, comment);
+    return this.orderService.addOrderReview(
+      orderId,
+      createReviewDto.userId,
+      createReviewDto.rating,
+      createReviewDto.comment
+    );
   }
 
+  @Put(":orderId/courier")
+  @HttpCode(200)
   @ApiOperation({ summary: "Assign a courier to an order" })
   @ApiParam({ name: "orderId", description: "Order ID" })
   @ApiBody({ type: Number })
   @ApiResponse({ status: 200, description: "Courier assigned successfully" })
   @ApiResponse({ status: 400, description: "Invalid courier ID" })
-  @Put(":orderId/courier")
   @Access()
   async assignCourier(
     @Param("orderId") orderId: number,
     @Body() courierId: number
-  ) {
+  ): Promise<Order> {
     return this.orderService.assignCourier(orderId, courierId);
   }
 
+  @Post(":orderId/item")
+  @HttpCode(201)
   @ApiOperation({ summary: "Add an item to an order" })
   @ApiParam({ name: "orderId", description: "Order ID" })
   @ApiBody({ type: Object })
   @ApiResponse({ status: 201, description: "Item added to order" })
-  @Post(":orderId/item")
   @Access()
   async addOrderItem(
     @Param("orderId") orderId: number,
@@ -117,11 +125,16 @@ export class OrderController {
     return this.orderService.addOrderItem(orderId, productId, quantity);
   }
 
+  @Put(":orderItemId")
+  @HttpCode(200)
   @ApiOperation({ summary: "Update an item in an order" })
-  @ApiParam({ name: "orderItemId", description: "Order Item ID" })
+  @ApiParam({
+    name: "orderItemId",
+    required: true,
+    description: "Order Item ID",
+  })
   @ApiBody({ type: Object })
   @ApiResponse({ status: 200, description: "Order item updated" })
-  @Put(":orderItemId")
   @Access()
   async updateOrderItem(
     @Param("orderItemId") orderItemId: number,
@@ -130,21 +143,30 @@ export class OrderController {
     return this.orderService.updateOrderItem(orderItemId, quantity);
   }
 
-  @ApiOperation({ summary: "Remove an item from an order" })
-  @ApiParam({ name: "orderItemId", description: "Order Item ID" })
-  @ApiResponse({ status: 200, description: "Order item removed" })
   @Delete(":orderItemId")
+  @HttpCode(200)
+  @ApiOperation({ summary: "Remove an item from an order" })
+  @ApiParam({
+    name: "orderItemId",
+    required: true,
+    description: "Order Item ID",
+  })
+  @ApiResponse({ status: 200, description: "Order item removed" })
   @Access()
   async removeOrderItem(@Param("orderItemId") orderItemId: number) {
     return this.orderService.removeOrderItem(orderItemId);
   }
 
+  @Get(":orderId/reviews")
+  @HttpCode(200)
   @ApiOperation({ summary: "Get reviews of an order" })
   @ApiParam({ name: "orderId", description: "Order ID" })
   @ApiResponse({ status: 200, description: "Reviews of the order" })
-  @Get(":orderId/reviews")
+  @ApiResponse({ status: 404, description: "Order not found" })
   @Access()
-  async getOrderReviews(@Param("orderId") orderId: number) {
+  async getOrderReviews(
+    @Param("orderId") orderId: number
+  ): Promise<Order_Review[]> {
     return this.orderService.getOrderReviews(orderId);
   }
 }
