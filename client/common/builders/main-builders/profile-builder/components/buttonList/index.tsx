@@ -28,9 +28,16 @@ const ButtonProfileList = () => {
     router.navigate("/main/profile-about-page");
   };
 
+  const handleOnPressOrderHistory = () => {
+    router.navigate("/main/order-history-page");
+  };
+
   return (
     <View style={style.buttonsContainer}>
-      <ProfileButton title="Архів заказів" onPress={() => {}} />
+      <ProfileButton
+        title="Архів заказів"
+        onPress={handleOnPressOrderHistory}
+      />
       <ProfileButton
         title="Обліковий запис"
         onPress={handleOnPressProfileAbout}

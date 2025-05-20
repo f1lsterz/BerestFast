@@ -26,7 +26,9 @@ const FooterContainer = () => {
   useEffect(() => {
     setisProfileSelected(
       pathName === "/main/profile-page" ||
-        pathName === "/main/profile-about-page"
+        pathName === "/main/profile-about-page" ||
+        pathName === "/main/order-history-page" ||
+        pathName === "profile-change-name-page-builder"
     );
   }, [pathName]);
 

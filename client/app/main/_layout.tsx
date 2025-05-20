@@ -8,7 +8,7 @@ export default function Layout() {
       <Stack
         screenOptions={{
           headerShown: false,
-          animation: "none", 
+          animation: "none",
         }}
       >
         <Stack.Screen name="main-page/index" />
@@ -16,6 +16,8 @@ export default function Layout() {
         <Stack.Screen name="profile-page/index" />
         <Stack.Screen name="profile-about-page/index" />
         <Stack.Screen name="cart-page/index" />
+        <Stack.Screen name="order-history-page" />
+        <Stack.Screen name="profile-change-name-page" />
         <Slot />
       </Stack>
       <FooterContainer />
