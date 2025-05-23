@@ -3,7 +3,7 @@ import { registerAs } from "@nestjs/config";
 export default registerAs("config", () => ({
   server: {
     port: process.env.SERVER_PORT || 3000,
-    url: process.env.SERVER_URL || "https://localhost",
+    url: process.env.SERVER_URL || "http://localhost",
   },
   database: {
     url: process.env.DATABASE_URL || "mysql://root:123456@localhost:3306/dely",

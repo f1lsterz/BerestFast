@@ -14,7 +14,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const port = configService.get<number>("config.server.port") || 3000;
   const url =
-    configService.get<string>("config.server.url") || "https://localhost";
+    configService.get<string>("config.server.url") || "http://localhost";
 
   app.useGlobalPipes(validationConfig);
   app.useGlobalFilters(new AllExceptionsFilter());
