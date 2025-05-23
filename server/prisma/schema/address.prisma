@@ -1,22 +1,24 @@
 model Address {
-    id Int @id @default(autoincrement())
-    street String? @db.VarChar(255)
-    house String @db.VarChar(255)
-    flat Int?
+  id           Int                  @id @default(autoincrement())
+  street       String?              @db.VarChar(255)
+  house        String               @db.VarChar(255)
+  flat         Int?
 
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @updatedAt @map("updated_at")
+  users        Users_Addresses[]    
 
-    usersAddresses Users_Addresses[] 
+  createdAt    DateTime             @default(now()) @map("created_at")
+  updatedAt    DateTime             @updatedAt      @map("updated_at")
+
+  @@map("addresses")
 }
 
 model Users_Addresses {
-    userId Int @map("user_id") 
-    addressId Int @map("address_id") 
-    
-    user User @relation(fields: [userId], references: [id])
-    address Address @relation(fields: [addressId], references: [id])
-    
-    @@id([userId, addressId])
-    @@map("users_addresses")
+  userId       Int       @map("user_id")
+  user         User      @relation(fields: [userId], references: [id])
+
+  addressId    Int       @map("address_id")
+  address      Address   @relation(fields: [addressId], references: [id])
+
+  @@id([userId, addressId])
+  @@map("users_addresses")
 }

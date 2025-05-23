@@ -3,17 +3,17 @@ import { registerAs } from "@nestjs/config";
 export default registerAs("config", () => ({
   server: {
     port: process.env.SERVER_PORT || 3000,
-    url: process.env.SERVER_URL || "http://localhost",
+    url: process.env.SERVER_URL || "https://localhost",
   },
   database: {
     url: process.env.DATABASE_URL || "mysql://root:123456@localhost:3306/dely",
   },
   secret: process.env.JWT_SECRET || "dely",
   signOptions: {
-    expiresIn: process.env.JWT_ACCESS_EXPIRES_IN || "1d",
+    expiresIn: process.env.JWT_ACCESS_EXPIRES_IN || "3d",
   },
   refreshSignOptions: {
-    expiresIn: process.env.JWT_REFRESH_EXPIRES_IN || "7d",
+    expiresIn: process.env.JWT_REFRESH_EXPIRES_IN || "30d",
   },
   socket: {
     chatPort: process.env.SOCKET_CHAT_PORT || 3001,

@@ -1,47 +1,49 @@
 model Product {
-    id Int @id @default(autoincrement())
-    name String
-    price Decimal @db.Decimal(10, 2)
-    newPrice    Decimal? @db.Decimal(10, 2)  @map("new_price")
-    hasDiscount Boolean @default(false) @map("has_discount")
-    image_url String
+  id            Int              @id @default(autoincrement())
+  name          String
+  price         Decimal          @db.Decimal(10, 2)
+  newPrice      Decimal?         @db.Decimal(10, 2) @map("new_price")
+  hasDiscount   Boolean          @default(false)   @map("has_discount")
+  imageUrl      String           @map("image_url")
 
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @updatedAt @map("updated_at")
+  categoryId    Int              @map("category_id")
+  storeId       Int?             @map("store_id")
+  restaurantId  Int?             @map("restaurant_id")
 
-    categoryId Int @map("category_id")
-    category Category @relation(fields: [categoryId], references: [id])
-    favouriteProducts Favourite_Product[]
-    orderItems Order_Items[]
-    storeId Int? @map("store_id")
-    store Store? @relation(fields: [storeId], references: [id])
-    restaurantId Int? @map("restaurant_id")
-    restaurant Restaurant? @relation(fields: [restaurantId], references: [id])
+  category      Category         @relation(fields: [categoryId],   references: [id])
+  store         Store?           @relation(fields: [storeId],      references: [id])
+  restaurant    Restaurant?      @relation(fields: [restaurantId], references: [id])
 
-    @@index([name])
-    @@index([storeId])
-    @@index([restaurantId])
+  favouriteProducts FavouriteProduct[]
+  orderItems        OrderItems[]
+
+  createdAt     DateTime         @default(now()) @map("created_at")
+  updatedAt     DateTime         @updatedAt      @map("updated_at")
+
+  @@index([name])
+  @@index([storeId])
+  @@index([restaurantId])
 }
 
 model Category {
-    id Int @id @default(autoincrement())
-    name String @unique
+  id           Int       @id @default(autoincrement())
+  name         String    @unique
 
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @updatedAt @map("updated_at")
+  products     Product[]
 
-    products Product[]
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt      @map("updated_at")
 
-    @@index([name])
+  @@index([name])
 }
 
-model Favourite_Product {
-    userId Int @map("user_id") 
-    productId Int @map("product_id")
+model FavouriteProduct {
+  userId       Int       @map("user_id")
+  productId    Int       @map("product_id")
 
-    user User @relation(fields: [userId], references: [id])
-    product Product @relation(fields: [productId], references: [id])
+  user         User      @relation(fields: [userId],    references: [id])
+  product      Product   @relation(fields: [productId], references: [id])
 
-    @@id([userId, productId])
-    @@map("favourite_product")
+  @@id([userId, productId])
+  @@map("favourite_product")
 }

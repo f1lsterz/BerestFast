@@ -1,58 +1,87 @@
 model Order {
     id Int @id @default(autoincrement())
     status Order_Status @default(PENDING)
+    totalAmount    Decimal   @db.Decimal(10,2)  @default(0)
 
-    completedAt DateTime? @map("completed_at")
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @updatedAt @map("updated_at")
+    userId      Int           @map("user_id")
+    courierId   Int           @map("courier_id")
 
-    userId Int @map("user_id")
-    user User @relation("UserOrders", fields: [userId], references: [id])
-    courierId Int @map("courier_id")
-    courier User @relation("CourierOrders", fields: [courierId], references: [id])
+    chat        Chat?
+    payment     Payment?
+    review      OrderReview?
 
-    orderItems Order_Items[]
-    chat Chat?
-    payment Payment?
-    reviews Order_Review[]
+    user        User          @relation("UserOrders",    fields: [userId],    references: [id])
+    courier     User          @relation("CourierOrders", fields: [courierId], references: [id])
+    parts       OrderPart[]
+
+    createdAt   DateTime      @default(now()) @map("created_at")
+    updatedAt   DateTime      @updatedAt      @map("updated_at")
+    completedAt DateTime?     @map("completed_at")
 
     @@index([userId])
     @@index([courierId])
+    @@map("orders")
 }
 
-model Order_Items {
-    id Int @id @default(autoincrement())
-    quantity Int
+model OrderPart {
+  id           Int           @id @default(autoincrement())
+  status       Order_Status  @default(PENDING)
+  amount       Decimal       @db.Decimal(10, 2)
 
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @updatedAt @map("updated_at")
+  orderId      Int           @map("order_id")
+  storeId      Int?          @map("store_id")
+  restaurantId Int?          @map("restaurant_id")
 
-    orderId Int @map("order_id")
-    order Order @relation(fields: [orderId], references: [id])
-    productId Int @map("product_id")
-    product Product @relation(fields: [productId], references: [id])
+  order        Order         @relation(fields: [orderId],       references: [id])
+  store        Store?        @relation(fields: [storeId],       references: [id])
+  restaurant   Restaurant?   @relation(fields: [restaurantId], references: [id])
 
-    @@index([orderId]) 
-    @@index([productId]) 
-    @@map("order_items")
+  items        OrderItems[]
+
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt      @map("updated_at")
+
+  @@index([orderId])
+  @@index([storeId])
+  @@index([restaurantId])
+  @@map("order_parts")
 }
 
-model Order_Review {
-    id Int @id @default(autoincrement())
-    rating Int
-    comment String?
+model OrderItems {
+  id           Int         @id @default(autoincrement())
+  quantity     Int
 
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @updatedAt @map("updated_at")
+  orderPartId  Int         @map("order_part_id")
+  productId    Int         @map("product_id")
 
-    orderId Int @map("order_id")
-    order Order @relation(fields: [orderId], references: [id])
-    userId Int @map("user_id")
-    user User @relation(fields: [userId], references: [id])
+  orderPart    OrderPart   @relation(fields: [orderPartId], references: [id])
+  product      Product     @relation(fields: [productId],   references: [id])
 
-    @@index([orderId])
-    @@index([userId])
-    @@map("order_reviews")
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt      @map("updated_at")
+
+  @@index([orderPartId])
+  @@index([productId])
+  @@map("order_items")
+}
+
+model OrderReview {
+  id           Int       @id @default(autoincrement())
+  rating       Int
+  comment      String?
+
+  orderId      Int       @unique @map("order_id")
+  userId       Int       @map("user_id")
+
+  order        Order     @relation(fields: [orderId], references: [id])
+  user         User      @relation(fields: [userId],  references: [id])
+
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt      @map("updated_at")
+
+  @@index([orderId])
+  @@index([userId])
+  @@map("order_reviews")
 }
 
 enum Order_Status {

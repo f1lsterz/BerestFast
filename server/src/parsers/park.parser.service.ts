@@ -1,32 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import * as puppeteer from "puppeteer";
+import { BaseParserService } from "./base.parser.service";
+import { CafeCategory, CafeDish } from "./types/menu";
 
-export type CafeDish = {
-  title: string;
-  price: number;
-  description: string;
-  imageUrl?: string;
-  size?: string;
-  subcategory: string;
-};
-
-export type CafeCategory = {
-  name: string;
-  dishes: CafeDish[];
-};
-
-export type OpeningHours = {
-  day: string;
-  open: string | null;
-  close: string | null;
-};
-
-export type AddressInfo = {
-  text: string;
-  mapUrl: string;
-};
-
-const categories = [
+export const categories = [
   {
     name: "Меню",
     url: "https://central-park253.choiceqr.com/section:menyu",
@@ -54,17 +31,7 @@ const categories = [
 ];
 
 @Injectable()
-export class CentralParkParserService {
-  private launchOptions = {
-    headless: false,
-    args: ["--no-sandbox", "--start-maximized"],
-    defaultViewport: null as any,
-  };
-
-  private async delay(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
+export class CentralParkParserService extends BaseParserService {
   private async parseCategory(
     browser: puppeteer.Browser,
     url: string
@@ -73,60 +40,93 @@ export class CentralParkParserService {
     await page.goto(url, { waitUntil: "networkidle2" });
     await this.delay(2000);
 
-    let subcategory = "—";
+    await this.clickAllButtonsByText(page, "Показати доповнення");
 
-    const subcategoryElement = await page.$(
-      '[class*="DefaultView_categoryName"]'
-    );
-    if (subcategoryElement) {
-      const rawText = await page.evaluate(
-        (el) => el.textContent,
-        subcategoryElement
-      );
-      subcategory =
-        rawText
-          ?.trim()
-          .toLowerCase()
-          .replace(/^./, (c) => c.toUpperCase()) || "—";
-    }
+    const dishes: CafeDish[] = await page.$$eval(
+      '[class*="DefaultView_categoryWrapper"]',
+      (wrappers) => {
+        const out: CafeDish[] = [];
 
-    const dishes = await page.$$eval(
-      '[class*="DefaultView_categoryMenu"] > div',
-      (els, subcat) =>
-        Array.from(els).map((dish) => {
-          const text = (sel: string) =>
-            dish.querySelector(sel)?.textContent?.trim() || "—";
-          const title = text('[class*="menu-item-title"]');
-          const price =
-            parseFloat(
-              text('[class*="menu-item-price"]')
-                .replace(/\s|₴|uah/gi, "")
-                .replace(",", ".")
-            ) || 0;
-          const description =
-            dish
-              .querySelector('[class*="menu-item-description"]')
-              ?.textContent?.trim()
-              .replace(/\n+/g, "") || "";
-          const size =
-            Array.from(
-              dish.querySelectorAll('[class*="menu-label"]'),
-              (el) => el.textContent?.trim() || ""
-            )
-              .find((t) => /^\d+(?:г|мл)$/i.test(t))
-              ?.toLowerCase() || "";
-          const imageUrl =
-            dish.querySelector("picture img")?.getAttribute("src") || undefined;
-          return {
-            title,
-            price,
-            description,
-            size,
-            imageUrl,
-            subcategory: subcat,
-          };
-        }),
-      subcategory
+        for (const wrapper of wrappers) {
+          const subcatEl = wrapper.querySelector(
+            '[class*="DefaultView_categoryName"]'
+          );
+          const menuEl = wrapper.querySelector(
+            '[class*="DefaultView_categoryMenu"]'
+          );
+          const currentSubcat =
+            subcatEl?.textContent
+              ?.trim()
+              ?.toLowerCase()
+              .replace(/^\p{L}/u, (c) => c.toUpperCase()) || "—";
+
+          if (!menuEl) continue;
+
+          const items = Array.from(menuEl.children);
+
+          for (const el of items) {
+            const hasTitle = !!el.querySelector('[class*="menu-item-title"]');
+            if (!hasTitle) continue;
+
+            const dishEl = el as HTMLElement;
+            const q = (sel: string) =>
+              dishEl.querySelector(sel)?.textContent?.trim() || "—";
+
+            const title = q('[class*="menu-item-title"]')
+              .toLowerCase()
+              .replace(/^\p{L}/u, (c) => c.toUpperCase());
+            const price =
+              parseFloat(
+                q('[class*="menu-item-price"]')
+                  .replace(/\s|₴|uah/gi, "")
+                  .replace(",", ".")
+              ) || 0;
+            const description =
+              dishEl
+                .querySelector('[class*="menu-item-description"]')
+                ?.textContent?.trim()
+                .replace(/\n+/g, "") ?? "";
+            const size =
+              Array.from(
+                dishEl.querySelectorAll('[class*="menu-label"]'),
+                (e) => e.textContent?.trim()
+              )
+                .find((t) => t && /^\d+(?:г|мл)$/i.test(t))
+                ?.toLowerCase() ?? null;
+            const imageUrl =
+              dishEl.querySelector("picture img")?.getAttribute("src") ?? null;
+
+            const addons: { title: string; price: number }[] = [];
+            dishEl
+              .querySelectorAll('div[class*="menuItemOptionsItem"]')
+              .forEach((optEl) => {
+                const nameEl = optEl.firstElementChild as HTMLElement | null;
+                const priceEl =
+                  nameEl?.nextElementSibling as HTMLElement | null;
+                if (nameEl && priceEl) {
+                  const addonName = nameEl.textContent?.trim() || "";
+                  const rawP = priceEl.textContent?.trim() || "";
+                  const addonPrice =
+                    parseFloat(rawP.replace(/[^\d,]/g, "").replace(",", ".")) ||
+                    0;
+                  addons.push({ title: addonName, price: addonPrice });
+                }
+              });
+
+            out.push({
+              title,
+              price,
+              description,
+              size,
+              imageUrl,
+              subcategory: currentSubcat,
+              addons,
+            });
+          }
+        }
+
+        return out;
+      }
     );
 
     await page.close();
@@ -134,7 +134,7 @@ export class CentralParkParserService {
   }
 
   async parseMenu(): Promise<CafeCategory[]> {
-    const browser = await puppeteer.launch(this.launchOptions);
+    const browser = await this.launch();
     const result: CafeCategory[] = [];
 
     for (const { name, url } of categories) {
@@ -144,72 +144,5 @@ export class CentralParkParserService {
 
     await browser.close();
     return result;
-  }
-
-  async parseLogo(): Promise<string> {
-    const browser = await puppeteer.launch(this.launchOptions);
-    const page = await browser.newPage();
-    await page.goto(categories[0].url, { waitUntil: "networkidle2" });
-    await this.delay(500);
-
-    const logoUrl = await page.$eval('div[class*="styles_logo"]', (el) => {
-      const bg = (el as HTMLElement).style.backgroundImage;
-      const match = bg.match(/url\(["']?(.*?)["']?\)/);
-      return match ? match[1] : "";
-    });
-
-    await browser.close();
-    return logoUrl;
-  }
-
-  async parseAddress(): Promise<AddressInfo> {
-    const browser = await puppeteer.launch(this.launchOptions);
-    const page = await browser.newPage();
-    await page.goto(categories[0].url, { waitUntil: "networkidle2" });
-    await this.delay(500);
-
-    const mapUrl = await page.$eval(
-      'a[href*="maps.google.com"]',
-      (a: HTMLAnchorElement) => a.href
-    );
-
-    const text = await page.$eval(
-      'a[href*="maps.google.com"] > div:nth-child(2)',
-      (el: HTMLElement) => el.textContent?.trim() || ""
-    );
-
-    await browser.close();
-    return { text, mapUrl };
-  }
-
-  async parseOpeningHours(): Promise<OpeningHours[]> {
-    const browser = await puppeteer.launch(this.launchOptions);
-    const page = await browser.newPage();
-    await page.goto(categories[0].url, { waitUntil: "networkidle2" });
-    await this.delay(500);
-
-    const rawTime = await page.$eval(
-      'div[class*="styles_workTimeValue"] > div',
-      (el: HTMLElement) => el.textContent?.trim() || ""
-    );
-
-    await browser.close();
-
-    const [open, close] = rawTime.split(/–|-/).map((s) => s.trim());
-
-    const days = [
-      "Понеділок",
-      "Вівторок",
-      "Середа",
-      "Четвер",
-      "Пʼятниця",
-      "Субота",
-      "Неділя",
-    ];
-    return days.map((day) => ({
-      day,
-      open: open || null,
-      close: close || null,
-    }));
   }
 }

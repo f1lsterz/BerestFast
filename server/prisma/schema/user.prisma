@@ -1,39 +1,40 @@
 model User {
-  id Int @id @default(autoincrement())
-  phoneNumber String @unique
-  name String @db.VarChar(100)
-  password String 
-  photoUrl String?
-  role Role @default(USER)
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id              Int                  @id @default(autoincrement())
+  phoneNumber     String               @unique
+  name            String               @db.VarChar(100)
+  password        String
+  photoUrl        String?
+  role            Role                 @default(USER)
 
   restaurantPartners RestaurantPartner[]
-  chatParticipants ChatParticipant[]
-  messages Message[]
-  sessions Session[]
-  orders Order[] @relation("UserOrders")
-  deliveries Order[] @relation("CourierOrders")
-  favouriteProducts Favourite_Product[]
-  userAddresses Users_Addresses[]
-  payments Payment[]
-  reviews Order_Review[]
+  chatParticipants   ChatParticipant[]
+  messages           Message[]
+  sessions           Session[]
+  orders             Order[]             @relation("UserOrders")
+  deliveries         Order[]             @relation("CourierOrders")
+  favouriteProducts  FavouriteProduct[]
+  userAddresses      Users_Addresses[]
+  payments           Payment[]
+  reviews            OrderReview[]
+
+  createdAt       DateTime             @default(now()) @map("created_at")
+  updatedAt       DateTime             @updatedAt      @map("updated_at")
 }
 
 model Session {
-  id Int @id @default(autoincrement())
-  refreshToken String @db.VarChar(500)
-  deviceName String
-  os String 
-  appVersion String
-  ipAddress String?
+  id           Int       @id @default(autoincrement())
+  refreshToken String    @db.VarChar(500)
+  deviceName   String
+  os           String
+  appVersion   String
+  ipAddress    String?
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  userId       Int       @map("user_id")
+  user         User      @relation(fields: [userId], references: [id])
 
-  userId Int @map("user_id")
-  user User @relation(fields: [userId], references: [id]) 
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt      @map("updated_at")
+
   @@unique([userId, refreshToken])
 }
 

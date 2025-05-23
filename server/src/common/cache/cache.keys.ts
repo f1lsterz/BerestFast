@@ -27,3 +27,15 @@ export const CACHE_ORDERS = {
 };
 
 export const CACHE_CHATS = {};
+
+export const CACHE_ADDRESSES = {
+  USER_ADDRESSES: (userId: number) =>
+    `${CACHE_PREFIX}:user:${userId}:addresses`,
+  ADDRESS: (addressId: number) => `${CACHE_PREFIX}:address:${addressId}`,
+  ALL_ADDRESSES: `${CACHE_PREFIX}:addresses`,
+};
+
+export const CACHE_STORES = {
+  STORE: (id: number) => `store:${id}`,
+  ALL_STORES: "stores:all",
+};

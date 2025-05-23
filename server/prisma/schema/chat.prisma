@@ -1,42 +1,48 @@
 model Chat {
-    id Int @id @default(autoincrement())
-    type ChatType @default(ORDER)
+  id           Int                @id @default(autoincrement())
+  type         ChatType           @default(ORDER)
 
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @updatedAt @map("updated_at")
-    
-    orderId Int?  @unique @map("order_id")
-    order Order?  @relation(fields: [orderId], references: [id])
-    participants ChatParticipant[]
-    messages Message[]
+  orderId      Int?               @unique @map("order_id")
+  order        Order?             @relation(fields: [orderId], references: [id])
 
-    @@index([orderId])
+  participants ChatParticipant[]  
+  messages     Message[]           
+
+  createdAt    DateTime           @default(now()) @map("created_at")
+  updatedAt    DateTime           @updatedAt      @map("updated_at")
+
+  @@index([orderId])
+  @@map("chats")
 }
 
 model Message {
-    id Int @id @default(autoincrement())
-    content String?
-    imageUrl String? @map("media_url")
+  id           Int       @id @default(autoincrement())
+  content      String?   
+  imageUrl     String?   @map("media_url")
 
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @updatedAt @map("updated_at")
+  chatId       Int       @map("chat_id")
+  chat         Chat      @relation(fields: [chatId], references: [id])
 
-    userId Int @map("user_id")
-    user User @relation(fields: [userId], references: [id])
-    chatId Int @map("chat_id")
-    chat Chat @relation(fields: [chatId], references: [id])
+  userId       Int       @map("user_id")
+  user         User      @relation(fields: [userId], references: [id])
 
-    @@unique([chatId, userId])
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt      @map("updated_at")
+
+  @@index([chatId])
+  @@index([userId])
+  @@map("messages")
 }
 
 model ChatParticipant {
-    chatId Int @map("chat_id")
-    chat Chat @relation(fields: [chatId], references: [id])
-    userId Int @map("user_id")
-    user User @relation(fields: [userId], references: [id])
+  chatId       Int       @map("chat_id")
+  chat         Chat      @relation(fields: [chatId], references: [id])
 
-    @@unique([chatId, userId])
-    @@map("chat_participants")
+  userId       Int       @map("user_id")
+  user         User      @relation(fields: [userId], references: [id])
+
+  @@id([chatId, userId])
+  @@map("chat_participants")
 }
 
 enum ChatType {

@@ -4,7 +4,6 @@ import { Cache } from "cache-manager";
 import { Inject, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { PrismaService } from "../prisma.service";
-import { v4 as uuidv4 } from "uuid";
 
 @Injectable()
 export class PaymentService {

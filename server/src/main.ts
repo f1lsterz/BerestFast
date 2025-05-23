@@ -13,6 +13,8 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
   const port = configService.get<number>("config.server.port") || 3000;
+  const url =
+    configService.get<string>("config.server.url") || "https://localhost";
 
   app.useGlobalPipes(validationConfig);
   app.useGlobalFilters(new AllExceptionsFilter());
@@ -21,8 +23,8 @@ async function bootstrap() {
   SwaggerModule.setup("api", app, document);
 
   await app.listen(port);
-  console.log(`Started server on localhost:${port}`);
-  console.log(`📄 Swagger documentation: http://localhost:${port}/api`);
+  console.log(`✅ Server started at ${url}:${port}`);
+  console.log(`📄 Swagger docs: ${url}:${port}/api`);
 }
 
 bootstrap();
