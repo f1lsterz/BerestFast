@@ -7,11 +7,10 @@ import {
   Param,
   Patch,
   Post,
-  Put,
-  Query,
 } from "@nestjs/common";
 import { AddressService } from "./address.service";
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiOperation,
   ApiParam,
@@ -20,12 +19,12 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { Access } from "../common/decorators/access.decorator";
-import { Role } from "@prisma/client";
 import { CurrentUser } from "src/common/decorators/current.user.decorator";
 import { CreateAddressDto } from "./dto/create.address.dto";
 import { UpdateAddressDto } from "./dto/update.address.dto";
 import { Address } from "./types/address";
 
+@ApiBearerAuth("jwt")
 @ApiTags("Addresses")
 @Controller("addresses")
 export class AddressController {

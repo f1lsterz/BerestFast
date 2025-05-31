@@ -17,12 +17,14 @@ import {
   ApiBody,
   ApiTags,
   ApiQuery,
+  ApiBearerAuth,
 } from "@nestjs/swagger";
 import { CreateOrderDto } from "./dto/create.order.dto";
 import { CreateReviewDto } from "./dto/create.review.dto";
 import { Access } from "../common/decorators/access.decorator";
-import { Order, Order_Review, Role } from "@prisma/client";
+import { Order, OrderReview, Role } from "@prisma/client";
 
+@ApiBearerAuth("jwt")
 @ApiTags("Orders")
 @Controller("orders")
 export class OrderController {
@@ -36,8 +38,8 @@ export class OrderController {
   @ApiResponse({ status: 400, description: "Invalid order data" })
   @Access()
   async createOrder(@Body() createOrderDto: CreateOrderDto): Promise<Order> {
-    const { userId, courierId, orderItems } = createOrderDto;
-    return this.orderService.createOrder(userId, courierId, orderItems);
+    const { userId, courierId } = createOrderDto;
+    return this.orderService.createOrder(userId, courierId);
   }
 
   @Get(":orderId")
@@ -166,7 +168,7 @@ export class OrderController {
   @Access()
   async getOrderReviews(
     @Param("orderId") orderId: number
-  ): Promise<Order_Review[]> {
+  ): Promise<OrderReview[]> {
     return this.orderService.getOrderReviews(orderId);
   }
 }

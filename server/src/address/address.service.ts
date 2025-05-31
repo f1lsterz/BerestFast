@@ -20,7 +20,7 @@ export class AddressService {
     const address = await this.prisma.address.create({
       data: {
         ...data,
-        usersAddresses: {
+        users: {
           create: { userId },
         },
       },
@@ -38,7 +38,7 @@ export class AddressService {
 
     const addresses = await this.prisma.address.findMany({
       where: {
-        usersAddresses: {
+        users: {
           some: {
             userId,
           },

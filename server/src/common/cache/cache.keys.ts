@@ -20,10 +20,19 @@ export const CACHE_PRODUCTS = {
 export const CACHE_PAYMENTS = {};
 
 export const CACHE_ORDERS = {
-  ORDER: (id: number) => `${CACHE_PREFIX}:order:${id}`,
+  ORDER: (orderId: number) => `${CACHE_PREFIX}:order:${orderId}`,
   ALL_ORDERS: `${CACHE_PREFIX}:orders`,
   USER_ORDERS: (userId: number) => `${CACHE_PREFIX}:user:${userId}:orders`,
-  ORDER_REVIEWS: (id: number) => `${CACHE_PREFIX}:order:${id}:reviews`,
+  COURIER_ORDERS: (courierId: number) =>
+    `${CACHE_PREFIX}:courier:${courierId}:orders`,
+
+  ORDER_PARTS: (orderId: number) => `${CACHE_PREFIX}:order:${orderId}:parts`,
+  ORDER_PART: (partId: number) => `${CACHE_PREFIX}:orderpart:${partId}`,
+
+  ORDER_ITEMS: (orderPartId: number) =>
+    `${CACHE_PREFIX}:orderpart:${orderPartId}:items`,
+  ORDER_ITEM: (orderItemId: number) =>
+    `${CACHE_PREFIX}:orderitem:${orderItemId}`,
 };
 
 export const CACHE_CHATS = {};

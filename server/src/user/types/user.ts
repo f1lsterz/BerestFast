@@ -12,7 +12,8 @@ export class User {
 
   @ApiProperty({
     description: "Роль користувача",
-    enum: ["USER", "ADMIN", "COURIER"],
+    enum: ["USER", "ADMIN", "COURIER", "PARTNER"],
+    enumName: "UserRole",
   })
   role: string;
 

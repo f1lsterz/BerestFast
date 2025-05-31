@@ -41,7 +41,7 @@ export class CreateProductDto {
   })
   @IsString()
   @IsNotEmpty()
-  image_url: string;
+  imageUrl: string;
 
   @ApiProperty({ description: "ID категорії продукту", example: 1 })
   @IsInt()

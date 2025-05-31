@@ -1,8 +1,8 @@
 model Restaurant {
   id           Int       @id @default(autoincrement())
-  name         String
-  address      String
-  logoUrl      String?
+  name         String    @db.VarChar(255)
+  address      String    @db.VarChar(500)
+  logoUrl      String?   @db.VarChar(500)
 
   partners     RestaurantPartner[]
   products     Product[]

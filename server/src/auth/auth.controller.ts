@@ -6,7 +6,12 @@ import { RegistrationDto } from "./dto/registration.dto";
 import { ResetPasswordDto } from "./dto/reset.password.dto";
 import { LogoutDto } from "./dto/logout.dto";
 import { RefreshTokenDto } from "./dto/refresh.token.dto";
-import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from "@nestjs/swagger";
 import { SendCodeDto } from "./dto/send.code.dto";
 import { TwilioService } from "../twilio/twilio.service";
 import { VerifyCodeDto } from "./dto/verify.code.dto";
@@ -48,6 +53,7 @@ export class AuthController {
   @ApiOperation({ summary: "Refresh access token" })
   @ApiResponse({ status: 200, description: "New access token generated" })
   @ApiResponse({ status: 403, description: "Invalid refresh token" })
+  @ApiBearerAuth("jwt")
   @Access()
   async refresh(@Body() refreshTokenDto: RefreshTokenDto): Promise<AuthTokens> {
     return await this.authService.refreshToken(
@@ -61,6 +67,7 @@ export class AuthController {
   @ApiOperation({ summary: "User logout" })
   @ApiResponse({ status: 200, description: "User successfully logged out" })
   @ApiResponse({ status: 400, description: "Invalid request" })
+  @ApiBearerAuth("jwt")
   @Access()
   async logout(@Body() logoutDto: LogoutDto): Promise<void> {
     return await this.authService.logout(

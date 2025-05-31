@@ -1,18 +1,18 @@
 model Order {
-    id Int @id @default(autoincrement())
-    status Order_Status @default(PENDING)
-    totalAmount    Decimal   @db.Decimal(10,2)  @default(0)
+    id            Int          @id @default(autoincrement())
+    status        Order_Status @default(PENDING)
+    totalAmount   Decimal?     @db.Decimal(10,2)  @default(0)
 
-    userId      Int           @map("user_id")
-    courierId   Int           @map("courier_id")
+    userId      Int            @map("user_id")
+    courierId   Int?           @map("courier_id")
 
-    chat        Chat?
+    chat        Chat?          
     payment     Payment?
     review      OrderReview?
 
     user        User          @relation("UserOrders",    fields: [userId],    references: [id])
-    courier     User          @relation("CourierOrders", fields: [courierId], references: [id])
-    parts       OrderPart[]
+    courier     User?         @relation("CourierOrders", fields: [courierId], references: [id])
+    parts       OrderPart[]   
 
     createdAt   DateTime      @default(now()) @map("created_at")
     updatedAt   DateTime      @updatedAt      @map("updated_at")
@@ -25,8 +25,7 @@ model Order {
 
 model OrderPart {
   id           Int           @id @default(autoincrement())
-  status       Order_Status  @default(PENDING)
-  amount       Decimal       @db.Decimal(10, 2)
+  amount       Decimal       @db.Decimal(10, 2) @default(0)
 
   orderId      Int           @map("order_id")
   storeId      Int?          @map("store_id")
@@ -36,7 +35,7 @@ model OrderPart {
   store        Store?        @relation(fields: [storeId],       references: [id])
   restaurant   Restaurant?   @relation(fields: [restaurantId], references: [id])
 
-  items        OrderItems[]
+  items        OrderItem[]   
 
   createdAt    DateTime      @default(now()) @map("created_at")
   updatedAt    DateTime      @updatedAt      @map("updated_at")
@@ -47,9 +46,9 @@ model OrderPart {
   @@map("order_parts")
 }
 
-model OrderItems {
+model OrderItem {
   id           Int         @id @default(autoincrement())
-  quantity     Int
+  quantity     Int         @default(1)
 
   orderPartId  Int         @map("order_part_id")
   productId    Int         @map("product_id")
@@ -67,8 +66,8 @@ model OrderItems {
 
 model OrderReview {
   id           Int       @id @default(autoincrement())
-  rating       Int
-  comment      String?
+  rating       Int       @default(0)
+  comment      String?   @db.VarChar(1000)
 
   orderId      Int       @unique @map("order_id")
   userId       Int       @map("user_id")

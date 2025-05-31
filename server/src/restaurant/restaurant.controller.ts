@@ -11,6 +11,7 @@ import {
 } from "@nestjs/common";
 import { RestaurantService } from "./restaurant.service";
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiOperation,
   ApiParam,
@@ -20,6 +21,7 @@ import {
 import { Access } from "../common/decorators/access.decorator";
 import { Role } from "@prisma/client";
 
+@ApiBearerAuth("jwt")
 @ApiTags("Restaurants")
 @Controller("restaurants")
 export class RestaurantController {

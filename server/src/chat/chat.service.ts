@@ -14,18 +14,28 @@ export class ChatService {
         orderId: createChatDto.orderId,
         type: createChatDto.type,
         participants: {
-          create: createChatDto.participants.map((userId) => ({ userId })),
+          create: createChatDto.participants.map((userId) => ({
+            userId,
+          })),
         },
       },
     });
   }
 
-  async sendMessage(sendMessageDto: SendMessageDto) {
+  async sendMessage(sendMessageDto: SendMessageDto & { chatId: number }) {
+    const chat = await this.prisma.chat.findUnique({
+      where: { id: sendMessageDto.chatId },
+    });
+    if (!chat) {
+      throw ApiError.NotFound("Chat not found");
+    }
+
     if (!sendMessageDto.content && !sendMessageDto.imageUrl) {
       throw ApiError.BadRequest(
         "Повідомлення має містити текст або зображення"
       );
     }
+
     return this.prisma.message.create({
       data: {
         chatId: sendMessageDto.chatId,
@@ -38,6 +48,13 @@ export class ChatService {
   }
 
   async getMessages(chatId: number, page = 1, limit = 20) {
+    const exists = await this.prisma.chat.findUnique({
+      where: { id: chatId },
+    });
+    if (!exists) {
+      throw ApiError.NotFound("Chat not found");
+    }
+
     return this.prisma.message.findMany({
       where: { chatId },
       include: { user: true },
@@ -48,6 +65,13 @@ export class ChatService {
   }
 
   async getUserChats(userId: number) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+    if (!user) {
+      throw ApiError.NotFound("User not found");
+    }
+
     return this.prisma.chat.findMany({
       where: { participants: { some: { userId } } },
       include: {

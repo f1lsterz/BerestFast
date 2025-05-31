@@ -110,13 +110,13 @@ export class ProductService {
   }
 
   async addToFavourites(userId: number, productId: number) {
-    return this.prisma.favourite_Product.create({
+    return this.prisma.favouriteProduct.create({
       data: { userId, productId },
     });
   }
 
   async removeFromFavourites(userId: number, productId: number) {
-    return this.prisma.favourite_Product.delete({
+    return this.prisma.favouriteProduct.delete({
       where: {
         userId_productId: {
           userId,
@@ -127,7 +127,7 @@ export class ProductService {
   }
 
   async isProductInFavourites(userId: number, productId: number) {
-    return this.prisma.favourite_Product.findUnique({
+    return this.prisma.favouriteProduct.findUnique({
       where: {
         userId_productId: {
           userId,
@@ -144,7 +144,7 @@ export class ProductService {
       return cashedData;
     }
 
-    const favourites = await this.prisma.favourite_Product.findMany({
+    const favourites = await this.prisma.favouriteProduct.findMany({
       where: { userId },
     });
     await this.cacheManager.set(`user:${userId}:favourites`, favourites, 3600);

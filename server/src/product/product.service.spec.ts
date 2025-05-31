@@ -39,7 +39,7 @@ describe("ProductService", () => {
         name: "Test Product",
         price: 100.5,
         hasDiscount: false,
-        image_url: "https://example.com/image.jpg",
+        imageUrl: "https://example.com/image.jpg",
         categoryId: 1,
       };
 
@@ -243,13 +243,13 @@ describe("ProductService", () => {
     it("should add product to favourites", async () => {
       const expectedResult = { userId: 1, productId: 2 };
 
-      (prisma.favourite_Product.create as jest.Mock).mockResolvedValue(
+      (prisma.favouriteProduct.create as jest.Mock).mockResolvedValue(
         expectedResult
       );
 
       const result = await service.addToFavourites(1, 2);
 
-      expect(prisma.favourite_Product.create).toHaveBeenCalledWith({
+      expect(prisma.favouriteProduct.create).toHaveBeenCalledWith({
         data: { userId: 1, productId: 2 },
       });
       expect(result).toEqual(expectedResult);
@@ -260,13 +260,13 @@ describe("ProductService", () => {
     it("should remove product from favourites", async () => {
       const expectedResult = { userId: 1, productId: 2 };
 
-      (prisma.favourite_Product.delete as jest.Mock).mockResolvedValue(
+      (prisma.favouriteProduct.delete as jest.Mock).mockResolvedValue(
         expectedResult
       );
 
       const result = await service.removeFromFavourites(1, 2);
 
-      expect(prisma.favourite_Product.delete).toHaveBeenCalledWith({
+      expect(prisma.favouriteProduct.delete).toHaveBeenCalledWith({
         where: { userId_productId: { userId: 1, productId: 2 } },
       });
       expect(result).toEqual(expectedResult);
@@ -277,13 +277,13 @@ describe("ProductService", () => {
     it("should check if product is in favourites", async () => {
       const favourite = { userId: 1, productId: 2 };
 
-      (prisma.favourite_Product.findUnique as jest.Mock).mockResolvedValue(
+      (prisma.favouriteProduct.findUnique as jest.Mock).mockResolvedValue(
         favourite
       );
 
       const result = await service.isProductInFavourites(1, 2);
 
-      expect(prisma.favourite_Product.findUnique).toHaveBeenCalledWith({
+      expect(prisma.favouriteProduct.findUnique).toHaveBeenCalledWith({
         where: { userId_productId: { userId: 1, productId: 2 } },
       });
       expect(result).toEqual(favourite);
@@ -304,13 +304,13 @@ describe("ProductService", () => {
     it("should return favourite products from DB and cache them if not in cache", async () => {
       const favourites = [{ userId: 1, productId: 2 }];
       cacheManager.get.mockResolvedValue(null);
-      (prisma.favourite_Product.findMany as jest.Mock).mockResolvedValue(
+      (prisma.favouriteProduct.findMany as jest.Mock).mockResolvedValue(
         favourites
       );
 
       const result = await service.getUserFavouriteProducts(1);
 
-      expect(prisma.favourite_Product.findMany).toHaveBeenCalledWith({
+      expect(prisma.favouriteProduct.findMany).toHaveBeenCalledWith({
         where: { userId: 1 },
       });
       expect(cacheManager.set).toHaveBeenCalledWith(

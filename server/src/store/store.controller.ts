@@ -11,6 +11,7 @@ import {
   ParseIntPipe,
 } from "@nestjs/common";
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiOperation,
   ApiParam,
@@ -24,6 +25,7 @@ import { Access } from "../common/decorators/access.decorator";
 import { Role } from "@prisma/client";
 import { Store } from "./types/store";
 
+@ApiBearerAuth("jwt")
 @ApiTags("Stores")
 @Controller("stores")
 export class StoreController {

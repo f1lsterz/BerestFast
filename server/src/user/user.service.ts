@@ -21,12 +21,12 @@ export class UserService {
     const cacheKey = CACHE_USERS.USER(id);
     const cachedUser = await this.cacheManager.get<User | null>(cacheKey);
     if (cachedUser) {
-      return cachedUser;
+      return cachedUser as User | null;
     }
 
     const user = await this.prisma.user.findUnique({ where: { id } });
     await this.cacheManager.set(cacheKey, user, 0);
-    return user;
+    return user as User | null;
   }
 
   async getUserByPhone(phoneNumber: string): Promise<User> {

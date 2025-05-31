@@ -14,6 +14,7 @@ import { CreateUserDto } from "./dto/create.user.dto";
 import { UpdateUserDto } from "./dto/update.user.dto";
 import { UserByIdNotPipe } from "../common/pipes/NotExistBy/UserByIdNot";
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiOperation,
   ApiParam,
@@ -31,6 +32,7 @@ import { Role } from "@prisma/client";
 import { PhoneDto } from "./dto/phone.dto";
 import { CurrentUser } from "src/common/decorators/current.user.decorator";
 
+@ApiBearerAuth("jwt")
 @ApiTags("Users")
 @Controller("users")
 export class UserController {
@@ -82,6 +84,7 @@ export class UserController {
     description: "User created",
     type: User,
   })
+  @Access()
   async createUser(
     @Body(UniquePhoneNumberPipe) createUserDto: CreateUserDto
   ): Promise<User> {

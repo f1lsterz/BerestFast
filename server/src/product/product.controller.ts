@@ -11,6 +11,7 @@ import {
 } from "@nestjs/common";
 import { ProductService } from "./product.service";
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiOperation,
   ApiParam,
@@ -30,6 +31,7 @@ export class ProductController {
   @Get()
   @HttpCode(200)
   @ApiOperation({ summary: "Get all products" })
+  @ApiBearerAuth("jwt")
   @Access()
   async getAllProducts() {
     return this.productService.getAllProducts();
@@ -39,6 +41,7 @@ export class ProductController {
   @HttpCode(201)
   @ApiOperation({ summary: "Create a new product" })
   @ApiBody({ type: CreateProductDto })
+  @ApiBearerAuth("jwt")
   @Access(Role.ADMIN)
   async createProduct(@Body() createProductDto: CreateProductDto) {
     return this.productService.createProduct(createProductDto);
@@ -49,6 +52,7 @@ export class ProductController {
   @ApiOperation({ summary: "Get products within a price range" })
   @ApiQuery({ name: "minPrice", type: Number })
   @ApiQuery({ name: "maxPrice", type: Number })
+  @ApiBearerAuth("jwt")
   @Access()
   async getProductsByPriceRange(
     @Query("minPrice") minPrice: number,
@@ -61,6 +65,7 @@ export class ProductController {
   @HttpCode(200)
   @ApiOperation({ summary: "Search for products by name" })
   @ApiQuery({ name: "searchTerm", type: String })
+  @ApiBearerAuth("jwt")
   @Access()
   async searchProducts(@Query("searchTerm") searchTerm: string) {
     return this.productService.searchProducts(searchTerm);
@@ -75,6 +80,7 @@ export class ProductController {
     required: false,
     description: "Optional limit on the number of random products",
   })
+  @ApiBearerAuth("jwt")
   @Access()
   async getRandomProducts(@Query("limit") limit?: number) {
     return this.productService.getRandomProducts(limit);
@@ -88,6 +94,7 @@ export class ProductController {
       properties: { userId: { type: "number" }, productId: { type: "number" } },
     },
   })
+  @ApiBearerAuth("jwt")
   @Access()
   async addToFavourites(@Body() body: { userId: number; productId: number }) {
     return this.productService.addToFavourites(body.userId, body.productId);
@@ -98,6 +105,7 @@ export class ProductController {
   @ApiOperation({ summary: "Remove product from favourites" })
   @ApiQuery({ name: "userId", type: Number })
   @ApiQuery({ name: "productId", type: Number })
+  @ApiBearerAuth("jwt")
   @Access()
   async removeFromFavourites(
     @Query("userId") userId: number,
@@ -109,6 +117,7 @@ export class ProductController {
   @Get("categories")
   @HttpCode(200)
   @ApiOperation({ summary: "Get all product categories" })
+  @ApiBearerAuth("jwt")
   @Access()
   async getCategories() {
     return await this.productService.getCategories();
@@ -119,6 +128,7 @@ export class ProductController {
   @ApiOperation({ summary: "Update a product by ID" })
   @ApiParam({ name: "id", type: Number })
   @ApiBody({ type: UpdateProductDto })
+  @ApiBearerAuth("jwt")
   @Access(Role.ADMIN)
   async updateProduct(
     @Param("id") productId: number,
@@ -131,7 +141,6 @@ export class ProductController {
   @HttpCode(200)
   @ApiOperation({ summary: "Get a product by ID" })
   @ApiParam({ name: "id", type: Number })
-  //@Access()
   async getProductById(@Param("id") productId: number) {
     return this.productService.getProductById(productId);
   }
@@ -140,6 +149,7 @@ export class ProductController {
   @HttpCode(204)
   @ApiOperation({ summary: "Delete a product by ID" })
   @ApiParam({ name: "id", type: Number })
+  @ApiBearerAuth("jwt")
   @Access(Role.ADMIN)
   async deleteProduct(@Param("id") productId: number) {
     return this.productService.deleteProduct(productId);
@@ -151,6 +161,7 @@ export class ProductController {
   @ApiParam({ name: "categoryId", type: Number })
   @ApiQuery({ name: "sortBy", enum: ["price", "name"], required: false })
   @ApiQuery({ name: "sortOrder", enum: ["asc", "desc"], required: false })
+  @ApiBearerAuth("jwt")
   @Access()
   async getProductsByCategoryWithSort(
     @Param("categoryId") categoryId: number,
@@ -169,6 +180,7 @@ export class ProductController {
   @ApiOperation({ summary: "Check if a product is in user's favourites" })
   @ApiQuery({ name: "userId", type: Number })
   @ApiQuery({ name: "productId", type: Number })
+  @ApiBearerAuth("jwt")
   @Access()
   async isProductInFavourites(
     @Query("userId") userId: number,
@@ -181,6 +193,7 @@ export class ProductController {
   @HttpCode(200)
   @ApiOperation({ summary: "Get user's favourite products" })
   @ApiParam({ name: "userId", type: Number })
+  @ApiBearerAuth("jwt")
   @Access()
   async getUserFavouriteProducts(@Param("userId") userId: number) {
     return this.productService.getUserFavouriteProducts(userId);

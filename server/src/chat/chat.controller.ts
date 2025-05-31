@@ -30,28 +30,34 @@ export class ChatController {
     return this.chatService.getUserChats(userId);
   }
 
-  @Post("send-message")
+  @Post(":chatId/messages")
   @UseInterceptors(
     FileInterceptor("file", {
       limits: { fileSize: 5 * 1024 * 1024 },
       fileFilter: (req, file, cb) => {
         if (!file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
-          return cb(new Error("Підтримуються лише JPG, JPEG, PNG"), false);
+          return cb(
+            new BadRequestException("Підтримуються лише JPG, JPEG, PNG"),
+            false
+          );
         }
         cb(null, true);
       },
     })
   )
   async sendMessage(
+    @Param("chatId", ParseIntPipe) chatId: number,
     @Body() sendMessageDto: SendMessageDto,
     @UploadedFile() file?: Express.Multer.File
   ) {
-    let imageUrl: string | undefined = undefined;
-
-    /*     if (file) {
-      imageUrl = await this.awsService.uploadChatImage(file);
-    } */
-
-    return this.chatService.sendMessage({ ...sendMessageDto, imageUrl });
+    let imageUrl: string | undefined;
+    if (file) {
+      imageUrl = `/uploads/${file.filename}`;
+    }
+    return this.chatService.sendMessage({
+      chatId,
+      ...sendMessageDto,
+      imageUrl,
+    });
   }
 }

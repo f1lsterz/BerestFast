@@ -1,10 +1,10 @@
 model Product {
   id            Int              @id @default(autoincrement())
-  name          String
+  name          String           @db.VarChar(255)
   price         Decimal          @db.Decimal(10, 2)
   newPrice      Decimal?         @db.Decimal(10, 2) @map("new_price")
   hasDiscount   Boolean          @default(false)   @map("has_discount")
-  imageUrl      String           @map("image_url")
+  imageUrl      String           @db.VarChar(500)  @map("image_url")
 
   categoryId    Int              @map("category_id")
   storeId       Int?             @map("store_id")
@@ -15,7 +15,7 @@ model Product {
   restaurant    Restaurant?      @relation(fields: [restaurantId], references: [id])
 
   favouriteProducts FavouriteProduct[]
-  orderItems        OrderItems[]
+  orderItems        OrderItem[]
 
   createdAt     DateTime         @default(now()) @map("created_at")
   updatedAt     DateTime         @updatedAt      @map("updated_at")
@@ -27,7 +27,7 @@ model Product {
 
 model Category {
   id           Int       @id @default(autoincrement())
-  name         String    @unique
+  name         String    @unique @db.VarChar(100)
 
   products     Product[]
 
@@ -45,5 +45,5 @@ model FavouriteProduct {
   product      Product   @relation(fields: [productId], references: [id])
 
   @@id([userId, productId])
-  @@map("favourite_product")
+  @@map("favourite_products")
 }
